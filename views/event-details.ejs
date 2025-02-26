@@ -1,0 +1,9 @@
+<%- include('partials/header') %>
+<div class="container">
+  <h2 class="text-purple"><%= event.name %></h2>
+  <p>Date: <%= event.date.toDateString() %></p>
+  <p>Location: <%= event.location %></p>
+  <p>Price: <strong>$<%= event.price %></strong></p>
+  <a href="/book/<%= event.id %>" class="btn btn-primary">Book Now</a>
+</div>
+<%- include('partials/footer') %>

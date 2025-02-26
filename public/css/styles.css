@@ -1,0 +1,257 @@
+/* ========== Global Styles ========== */
+body {
+  background-color: #0a0f1d; /* Dark Background */
+  color: #ffffff;
+  font-family: "Poppins", sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* ========== Navbar ========== */
+.navbar {
+  background-color: rgba(10, 15, 29, 0.95);
+  padding: 12px 25px;
+  backdrop-filter: blur(5px);
+}
+
+.navbar-logo {
+  height: 80px;
+  width: auto;
+  filter: brightness(600%) contrast(220%);
+}
+
+@media (max-width: 768px) {
+  .navbar-logo {
+    height: 65px;
+  }
+}
+
+/* ========== Hero Section ========== */
+.hero {
+  position: relative;
+  height: 75vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2rem;
+}
+
+.hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  filter: brightness(90%) contrast(120%);
+}
+
+.hero-overlay {
+  background: rgba(0, 0, 0, 0.7);
+  width: 100%;
+  padding: 2rem;
+  border-radius: 12px;
+}
+
+.hero h1 {
+  font-size: 3.2rem;
+  font-weight: bold;
+  color: #a267ff; /* Neon Purple */
+  text-shadow: 0px 0px 12px rgba(162, 103, 255, 0.9);
+}
+
+.hero p {
+  font-size: 1.3rem;
+  margin-bottom: 1.8rem;
+  opacity: 0.9;
+}
+
+/* ========== Buttons ========== */
+.btn-primary {
+  background-color: #a267ff;
+  border-color: #a267ff;
+  transition: all 0.3s ease-in-out;
+  color: black;
+  font-weight: bold;
+  padding: 12px 25px;
+  border-radius: 8px;
+  box-shadow: 0px 0px 12px rgba(162, 103, 255, 0.6);
+}
+
+.btn-primary:hover {
+  background-color: #7e3fd8;
+  border-color: #7e3fd8;
+  transform: scale(1.05);
+  box-shadow: 0px 0px 18px rgba(162, 103, 255, 1);
+}
+
+/* ========== Events Section ========== */
+.event-card {
+  background-color: #131a31;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.3s ease-in-out;
+}
+
+.event-card:hover {
+  transform: scale(1.05);
+  border: 2px solid #a267ff;
+  box-shadow: 0px 0px 10px rgba(162, 103, 255, 0.8);
+}
+
+.event-img {
+  height: 220px;
+  object-fit: cover;
+  width: 100%;
+}
+
+.card-title {
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.event-date,
+.event-venue,
+.event-price {
+  font-size: 0.9rem;
+  color: #d3d3d3;
+}
+
+/* ========== CTA Section ========== */
+.cta-section {
+  background: linear-gradient(135deg, #a267ff, #7e3fd8);
+  padding: 60px 25px;
+  text-align: center;
+  border-radius: 12px;
+  box-shadow: 0px 0px 15px rgba(162, 103, 255, 0.8);
+}
+
+.cta-section h2 {
+  font-size: 2.8rem;
+  font-weight: bold;
+  color: white;
+}
+
+.cta-section p {
+  font-size: 1.4rem;
+}
+
+/* ========== Login & Signup Page ========== */
+.auth-container {
+  max-width: 400px;
+  margin: 80px auto;
+  padding: 40px;
+  background: #131a31;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0px 0px 12px rgba(162, 103, 255, 0.5);
+}
+
+.auth-container h3 {
+  color: #a267ff;
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.auth-container input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: none;
+  background: #1d2231;
+  color: white;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.auth-container input::placeholder {
+  color: #bbb;
+}
+
+.auth-container .form-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.auth-container .btn-auth {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 8px;
+  background-color: #a267ff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.auth-container .btn-auth:hover {
+  background-color: #7e3fd8;
+  transform: scale(1.05);
+  box-shadow: 0px 0px 10px rgba(162, 103, 255, 0.8);
+}
+
+/* ========== Admin Page ========== */
+.admin-dashboard {
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.admin-dashboard h2 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #a267ff;
+  text-shadow: 0px 0px 12px rgba(162, 103, 255, 0.8);
+}
+
+/* Footer */
+footer {
+  background-color: black;
+  text-align: center;
+  padding: 25px;
+  font-size: 0.95rem;
+}
+
+.footer h4,
+.footer h5 {
+  color: #a267ff;
+}
+
+.footer-links a {
+  color: #a267ff;
+  text-decoration: none;
+  opacity: 0.85;
+  transition: opacity 0.3s;
+}
+
+.footer-links a:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .admin-stats {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .admin-card {
+    width: 90%;
+  }
+
+  .admin-table th,
+  .admin-table td {
+    font-size: 0.85rem;
+    padding: 10px;
+  }
+
+  .admin-navbar {
+    padding: 12px 20px;
+  }
+}

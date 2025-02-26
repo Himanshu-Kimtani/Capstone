@@ -1,0 +1,12 @@
+<%- include('partials/header') %>
+<div class="container">
+  <h2 class="text-purple">Welcome, <%= user.name %>!</h2>
+  <p>Email: <%= user.email %></p>
+  <h4>My Tickets:</h4>
+  <ul>
+    <% bookings.forEach(booking => { %>
+    <li><%= booking.event.name %> - <%= booking.tickets %> Ticket(s)</li>
+    <% }) %>
+  </ul>
+</div>
+<%- include('partials/footer') %>

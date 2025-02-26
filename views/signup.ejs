@@ -1,0 +1,22 @@
+<%- include('partials/header') %>
+
+<div class="auth-container">
+  <h3>Create Your Account</h3>
+
+  <form action="/users/signup" method="POST">
+    <input type="text" name="name" placeholder="Enter your name" required />
+    <input type="email" name="email" placeholder="Enter your email" required />
+    <input
+      type="password"
+      name="password"
+      placeholder="Enter your password"
+      required
+    />
+
+    <button type="submit" class="btn-auth">Sign Up</button>
+
+    <p>Already have an account? <a href="/users/login">Login</a></p>
+  </form>
+</div>
+
+<%- include('partials/footer') %>

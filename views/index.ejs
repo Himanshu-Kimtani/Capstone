@@ -1,0 +1,66 @@
+<%- include('partials/header') %>
+
+<!-- Hero Section -->
+<section class="hero text-center position-relative">
+  <img
+    src="/images/hero-banner.jpg"
+    class="img-fluid hero-img"
+    alt="Concert Crowd"
+  />
+  <div class="hero-overlay">
+    <h1 class="fw-bold text-light">Feel the Beat,<br />Share the Moment</h1>
+    <p class="text-light">
+      Join the ultimate concert community for music lovers. Discover events,
+      connect with artists, and share your experiences.
+    </p>
+    <div class="mt-3">
+      <a href="/events" class="btn btn-lg btn-primary mx-2">Explore Events</a>
+      <a href="/users/signup" class="btn btn-lg btn-outline-light mx-2"
+        >Join Community</a
+      >
+    </div>
+  </div>
+</section>
+
+<!-- Featured Events Section -->
+<section class="container my-5">
+  <h2 class="text-center text-purple fw-bold">Trending Events</h2>
+  <div class="row">
+    <% events.forEach(event => { %>
+    <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+      <div class="card bg-dark text-light event-card">
+        <img
+          src="<%= event.imageUrl %>"
+          class="card-img-top event-img"
+          alt="<%= event.name %>"
+        />
+        <div class="card-body">
+          <h5 class="card-title"><%= event.name %></h5>
+          <p class="event-date"><%= event.date %> • <%= event.time %></p>
+          <p class="event-venue">
+            <i class="fas fa-map-marker-alt"></i> <%= event.venue %>
+          </p>
+          <p class="event-price"><strong>From $<%= event.price %></strong></p>
+          <a
+            href="/event/<%= event.id %>"
+            class="btn btn-sm btn-outline-light w-100"
+            >View Details</a
+          >
+        </div>
+      </div>
+    </div>
+    <% }) %>
+  </div>
+</section>
+
+<!-- Call-to-Action Section -->
+<section class="cta-section text-center py-5">
+  <h2 class="text-light fw-bold">Join the VYNYL Community</h2>
+  <p class="text-light">
+    Connect with fellow music lovers, discover new artists, and never miss
+    another beat.
+  </p>
+  <a href="/users/signup" class="btn btn-lg btn-primary mt-3">Create Account</a>
+</section>
+
+<%- include('partials/footer') %>
