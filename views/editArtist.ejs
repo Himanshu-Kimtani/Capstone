@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Artist</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="admin-body">
+    <%- include('partials/admin-header') %>
+
+    <div class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <div class="card">
+            <div class="card-header">
+              <h3>Edit Artist</h3>
+            </div>
+            <div class="card-body">
+              <form
+                action="/admin/artist/<%= artist.id %>/edit"
+                method="POST"
+                enctype="multipart/form-data"
+              >
+                <div class="mb-3">
+                  <label for="name" class="form-label">Artist Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="name"
+                    name="name"
+                    value="<%= artist.name %>"
+                    required
+                  />
+                </div>
+
+                <div class="mb-3">
+                  <label for="bio" class="form-label">Biography</label>
+                  <textarea
+                    class="form-control"
+                    id="bio"
+                    name="bio"
+                    rows="4"
+                    required
+                  >
+<%= artist.bio %></textarea
+                  >
+                </div>
+
+                <div class="mb-3">
+                  <label for="genre" class="form-label">Genre</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="genre"
+                    name="genre"
+                    value="<%= artist.genre %>"
+                    required
+                  />
+                </div>
+
+                <div class="mb-3">
+                  <label for="socialMedia" class="form-label"
+                    >Social Media Links</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control mb-2"
+                    id="instagram"
+                    name="socialMedia[instagram]"
+                    placeholder="Instagram URL"
+                    value="<%= artist.socialMedia?.instagram || '' %>"
+                  />
+                  <input
+                    type="text"
+                    class="form-control mb-2"
+                    id="twitter"
+                    name="socialMedia[twitter]"
+                    placeholder="Twitter URL"
+                    value="<%= artist.socialMedia?.twitter || '' %>"
+                  />
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="facebook"
+                    name="socialMedia[facebook]"
+                    placeholder="Facebook URL"
+                    value="<%= artist.socialMedia?.facebook || '' %>"
+                  />
+                </div>
+
+                <div class="mb-3">
+                  <label for="picture" class="form-label">Artist Picture</label>
+                  <% if (artist.picture) { %>
+                  <div class="mb-2">
+                    <img
+                      src="/uploads/artists/<%= artist.picture %>"
+                      alt="Artist Image"
+                      class="img-thumbnail rounded-circle"
+                      style="max-height: 150px; width: 150px; object-fit: cover"
+                    />
+                  </div>
+                  <% } %>
+                  <input
+                    type="file"
+                    class="form-control"
+                    id="picture"
+                    name="picture"
+                    accept="image/*"
+                  />
+                  <small class="text-muted"
+                    >Leave empty to keep current image</small
+                  >
+                </div>
+
+                <!-- Login Credentials Section -->
+                <hr />
+                <h4 class="mt-4 mb-3">Login Credentials</h4>
+
+                <div class="mb-3">
+                  <label for="email" class="form-label">Email Address</label>
+                  <input type="email" class="form-control" id="email"
+                  name="email" value="<%= artist.User ? artist.User.email : ''
+                  %>" <%= artist.User ? 'required' : '' %> />
+                  <small class="text-muted">
+                    <% if (artist.User) { %> Current login email for this artist
+                    <% } else { %> Set an email to create login credentials for
+                    this artist <% } %>
+                  </small>
+                </div>
+
+                <div class="mb-3">
+                  <label for="resetPassword" class="form-label"
+                    >Password Management</label
+                  >
+                  <select
+                    class="form-select"
+                    id="resetPassword"
+                    name="resetPassword"
+                  >
+                    <option value="no" selected>Keep current password</option>
+                    <option value="yes">Set new password</option>
+                  </select>
+                </div>
+
+                <div id="passwordFields" class="mb-3" style="display: none">
+                  <div class="mb-3">
+                    <label for="password" class="form-label"
+                      >New Password</label
+                    >
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="password"
+                      name="password"
+                      minlength="8"
+                    />
+                    <small class="text-muted">Minimum 8 characters</small>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="confirmPassword" class="form-label"
+                      >Confirm New Password</label
+                    >
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      minlength="8"
+                    />
+                  </div>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                  <button type="submit" class="btn btn-primary">
+                    Update Artist
+                  </button>
+                  <a href="/admin" class="btn btn-secondary">Cancel</a>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%- include('partials/admin-footer') %>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Toggle password fields based on resetPassword selection
+      document
+        .getElementById("resetPassword")
+        .addEventListener("change", function () {
+          const passwordFields = document.getElementById("passwordFields");
+          const passwordInput = document.getElementById("password");
+          const confirmPasswordInput =
+            document.getElementById("confirmPassword");
+
+          if (this.value === "yes") {
+            passwordFields.style.display = "block";
+            passwordInput.required = true;
+            confirmPasswordInput.required = true;
+          } else {
+            passwordFields.style.display = "none";
+            passwordInput.required = false;
+            confirmPasswordInput.required = false;
+          }
+        });
+
+      // Form validation
+      document
+        .querySelector("form")
+        .addEventListener("submit", function (event) {
+          const resetPassword = document.getElementById("resetPassword").value;
+
+          if (resetPassword === "yes") {
+            const password = document.getElementById("password").value;
+            const confirmPassword =
+              document.getElementById("confirmPassword").value;
+
+            if (password !== confirmPassword) {
+              event.preventDefault();
+              alert("Passwords do not match");
+            }
+          }
+        });
+    </script>
+  </body>
+</html>

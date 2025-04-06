@@ -1,0 +1,208 @@
+<%- include('../partials/header') %>
+
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-12">
+      <h2 class="text-primary-accent mb-4">
+        <i class="fas fa-ticket-alt"></i> My Tickets
+      </h2>
+
+      <% if (success && success.length > 0) { %>
+      <div class="alert alert-success"><%= success %></div>
+      <% } %> <% if (error && error.length > 0) { %>
+      <div class="alert alert-danger"><%= error %></div>
+      <% } %> <% if (bookings && bookings.length > 0) { %>
+      <div class="card bg-dark-surface mb-4 border-0 shadow-soft">
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-dark table-hover border-accent-soft">
+              <thead>
+                <tr>
+                  <th>Event</th>
+                  <th>Date</th>
+                  <th>Location</th>
+                  <th>Purchase Date</th>
+                  <th>Amount</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% bookings.forEach(booking => { %>
+                <tr>
+                  <td><strong><%= booking.Event.name %></strong></td>
+                  <td>
+                    <%= new Date(booking.Event.date).toLocaleDateString() %>
+                  </td>
+                  <td><%= booking.Event.location %></td>
+                  <td>
+                    <%= new Date(booking.purchaseDate).toLocaleDateString() %>
+                  </td>
+                  <td>$<%= booking.amount.toFixed(2) %></td>
+                  <td>
+                    <a
+                      href="/events/<%= booking.Event.id %>"
+                      class="btn btn-sm btn-outline-accent"
+                    >
+                      <i class="fas fa-info-circle"></i> Details
+                    </a>
+                    <a
+                      href="/users/events/<%= booking.Event.id %>/ticket"
+                      class="btn btn-sm btn-outline-primary"
+                    >
+                      <i class="fas fa-ticket-alt"></i> View Ticket
+                    </a>
+                  </td>
+                </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <% } else { %>
+      <div class="text-center py-5">
+        <div class="mb-3">
+          <i class="fas fa-ticket-alt fa-3x text-muted"></i>
+        </div>
+        <h5 class="text-muted">No tickets found</h5>
+        <p class="text-muted">You haven't booked any event tickets yet.</p>
+        <a href="/events" class="btn btn-gradient-primary">Browse Events</a>
+      </div>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<style>
+  :root {
+    --color-primary: #4f46e5;
+    --color-primary-dark: #4338ca;
+    --color-accent: #8b5cf6;
+    --color-accent-light: #a78bfa;
+    --color-success: #10b981;
+    --color-error: #ef4444;
+    --color-dark-surface: #1e1b4b;
+    --color-dark-input: #1e1e2d;
+    --color-border-dark: #2d2b42;
+  }
+
+  /* Background Colors */
+  .bg-dark-surface {
+    background-color: var(--color-dark-surface);
+  }
+
+  .bg-dark-input {
+    background-color: var(--color-dark-input);
+  }
+
+  /* Text Colors */
+  .text-primary-accent {
+    color: var(--color-primary);
+  }
+
+  .text-accent {
+    color: var(--color-accent-light);
+  }
+
+  /* Gradients */
+  .bg-gradient-primary {
+    background: linear-gradient(
+      135deg,
+      var(--color-primary),
+      var(--color-accent)
+    );
+  }
+
+  .bg-gradient-accent {
+    background: linear-gradient(
+      135deg,
+      var(--color-accent),
+      var(--color-primary-dark)
+    );
+  }
+
+  /* Buttons */
+  .btn-gradient-primary {
+    background: linear-gradient(
+      135deg,
+      var(--color-primary),
+      var(--color-accent)
+    );
+    border: none;
+    color: white;
+    transition: all 0.3s ease;
+  }
+
+  .btn-gradient-primary:hover {
+    background: linear-gradient(
+      135deg,
+      var(--color-accent),
+      var(--color-primary)
+    );
+    transform: translateY(-1px);
+    color: white;
+  }
+
+  .btn-outline-accent {
+    color: var(--color-accent-light);
+    border-color: var(--color-accent);
+    transition: all 0.3s ease;
+  }
+
+  .btn-outline-accent:hover {
+    background-color: var(--color-accent);
+    color: white;
+    transform: translateY(-1px);
+  }
+
+  .btn-outline-primary {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+    transition: all 0.3s ease;
+  }
+
+  .btn-outline-primary:hover {
+    background-color: var(--color-primary);
+    color: white;
+    transform: translateY(-1px);
+  }
+
+  /* Ticket Card */
+  .ticket-card {
+    transition: all 0.3s ease;
+    overflow: hidden;
+  }
+
+  .ticket-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(79, 70, 229, 0.2) !important;
+  }
+
+  .ticket-header {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ticket-header::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -10px;
+    width: 100%;
+    height: 20px;
+    background-image: radial-gradient(
+      circle at 10px -5px,
+      transparent 12px,
+      var(--color-dark-surface) 13px
+    );
+    background-size: 20px 20px;
+    background-repeat: repeat-x;
+  }
+
+  .ticket-icon {
+    width: 40px;
+    text-align: center;
+  }
+</style>
+
+<%- include('../partials/footer') %>

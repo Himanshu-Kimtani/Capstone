@@ -1,0 +1,236 @@
+<%- include('../partials/header') %>
+
+<div class="container mt-4">
+  <div class="row mb-4">
+    <div class="col-md-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <h2 class="text-primary-accent"><%= title %></h2>
+        <div>
+          <a href="/users/dashboard" class="btn btn-outline-accent">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Event Filter Tabs -->
+  <ul class="nav nav-tabs mb-4">
+    <li class="nav-item">
+      <a
+        class="nav-link <%= filter !== 'past' ? 'active bg-gradient-primary text-white' : 'text-accent' %>"
+        href="/users/events"
+      >
+        <i class="fas fa-calendar-alt"></i> Upcoming Events
+      </a>
+    </li>
+    <li class="nav-item">
+      <a
+        class="nav-link <%= filter === 'past' ? 'active bg-gradient-accent text-white' : 'text-accent' %>"
+        href="/users/events?filter=past"
+      >
+        <i class="fas fa-history"></i> Past Events
+      </a>
+    </li>
+  </ul>
+
+  <% if (error && error.length > 0) { %>
+  <div class="alert alert-danger" role="alert"><%= error %></div>
+  <% } %> <% if (success && success.length > 0) { %>
+  <div class="alert alert-success" role="alert"><%= success %></div>
+  <% } %>
+
+  <!-- Events List -->
+  <div class="card bg-dark-surface border-0 shadow-soft">
+    <div class="card-body">
+      <% if (events && events.length > 0) { %>
+      <div class="table-responsive">
+        <table class="table table-dark table-hover border-0">
+          <thead>
+            <tr>
+              <th>Event</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Location</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% events.forEach(event => { %>
+            <tr>
+              <td><strong><%= event.name %></strong></td>
+              <td>
+                <%= new Date(event.date).toLocaleDateString('en-US', { month:
+                'short', day: 'numeric', year: 'numeric' }) %>
+              </td>
+              <td>
+                <%= new Date(event.date).toLocaleTimeString('en-US', { hour:
+                '2-digit', minute: '2-digit' }) %>
+              </td>
+              <td><%= event.location %></td>
+              <td>
+                <a
+                  href="/events/<%= event.id %>"
+                  class="btn btn-sm btn-outline-accent"
+                >
+                  <i class="fas fa-info-circle"></i> Details
+                </a>
+                <% if (filter !== 'past') { %>
+                <a
+                  href="/events/<%= event.id %>/ticket"
+                  class="btn btn-sm btn-outline-primary"
+                >
+                  <i class="fas fa-ticket-alt"></i> View Ticket
+                </a>
+                <% } else { %>
+                <a
+                  href="/moments/new?eventId=<%= event.id %>"
+                  class="btn btn-sm btn-outline-primary"
+                >
+                  <i class="fas fa-camera"></i> Share Moment
+                </a>
+                <% } %>
+              </td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+      <% } else { %>
+      <div class="text-center py-5">
+        <div class="mb-3">
+          <i class="fas fa-calendar-times fa-3x text-muted"></i>
+        </div>
+        <h5 class="text-muted">
+          No <%= filter === 'past' ? 'past' : 'upcoming' %> events found
+        </h5>
+        <p class="text-muted">
+          <% if (filter === 'past') { %> You haven't attended any events yet. <%
+          } else { %> You don't have any upcoming events booked. <% } %>
+        </p>
+        <a href="/events" class="btn btn-gradient-primary mt-3">
+          <i class="fas fa-search"></i> Browse Events
+        </a>
+      </div>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Professional Color Palette */
+  :root {
+    --color-primary: #4f46e5;
+    --color-primary-dark: #4338ca;
+    --color-accent: #8b5cf6;
+    --color-accent-light: #a78bfa;
+    --color-success: #10b981;
+    --color-error: #ef4444;
+    --color-dark-surface: #1e1b4b;
+    --color-dark-input: #1e1e2d;
+    --color-border-dark: #2d2b42;
+  }
+
+  /* Background Colors */
+  .bg-dark-surface {
+    background-color: var(--color-dark-surface);
+  }
+
+  .bg-dark-input {
+    background-color: var(--color-dark-input);
+  }
+
+  /* Text Colors */
+  .text-primary-accent {
+    color: var(--color-primary);
+  }
+
+  .text-accent {
+    color: var(--color-accent-light);
+  }
+
+  /* Gradients */
+  .bg-gradient-primary {
+    background: linear-gradient(
+      135deg,
+      var(--color-primary),
+      var(--color-accent)
+    );
+  }
+
+  .bg-gradient-accent {
+    background: linear-gradient(
+      135deg,
+      var(--color-accent),
+      var(--color-primary-dark)
+    );
+  }
+
+  /* Buttons */
+  .btn-gradient-primary {
+    background: linear-gradient(
+      135deg,
+      var(--color-primary),
+      var(--color-accent)
+    );
+    border: none;
+    color: white;
+    transition: all 0.3s ease;
+  }
+
+  .btn-gradient-primary:hover {
+    background: linear-gradient(
+      135deg,
+      var(--color-accent),
+      var(--color-primary)
+    );
+    transform: translateY(-1px);
+    color: white;
+  }
+
+  .btn-outline-accent {
+    color: var(--color-accent-light);
+    border-color: var(--color-accent);
+    transition: all 0.3s ease;
+  }
+
+  .btn-outline-accent:hover {
+    background-color: var(--color-accent);
+    color: white;
+    transform: translateY(-1px);
+  }
+
+  /* Nav Tabs */
+  .nav-tabs {
+    border-bottom: 1px solid var(--color-accent);
+  }
+
+  .nav-tabs .nav-link {
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: all 0.3s ease;
+  }
+
+  .nav-tabs .nav-link:hover:not(.active) {
+    border-bottom: 2px solid var(--color-accent-light);
+    background-color: rgba(139, 92, 246, 0.1);
+  }
+
+  .nav-tabs .nav-link.active {
+    border: none;
+    border-bottom: 2px solid var(--color-accent);
+  }
+
+  /* Tables */
+  .table {
+    --bs-table-bg: transparent;
+    --bs-table-color: #fff;
+  }
+
+  .table-dark {
+    --bs-table-hover-bg: rgba(139, 92, 246, 0.1);
+  }
+</style>
+
+<%- include('../partials/footer') %>

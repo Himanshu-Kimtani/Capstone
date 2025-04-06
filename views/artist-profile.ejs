@@ -1,7 +1,85 @@
 <%- include('partials/header') %>
-<div class="container">
-  <h2 class="text-purple"><%= artist.name %></h2>
-  <p>Genre: <%= artist.genre %></p>
-  <p>Bio: <%= artist.bio %></p>
+
+<div class="container mt-4">
+  <!-- Artist Profile Header -->
+  <div class="text-center">
+    <img
+      src="<%= artist.imageUrl || '/images/artist-placeholder.jpg' %>"
+      class="rounded-circle"
+      width="150"
+      height="150"
+      alt="<%= artist.name %>"
+    />
+    <h2 class="text-purple mt-3"><%= artist.name %></h2>
+    <p class="text-muted">Genre: <%= artist.genre || "N/A" %></p>
+  </div>
+
+  <!-- Artist Bio -->
+  <div class="mt-4">
+    <h4>About</h4>
+    <p><%= artist.bio || "No bio available." %></p>
+  </div>
+
+  <!-- Social Media Links (Optional) -->
+  <% if (artist.instagram || artist.twitter || artist.youtube) { %>
+  <div class="mt-3">
+    <h5>Follow <%= artist.name %></h5>
+    <% if (artist.instagram) { %>
+    <a
+      href="<%= artist.instagram %>"
+      target="_blank"
+      class="btn btn-outline-light btn-sm"
+      >Instagram</a
+    >
+    <% } %> <% if (artist.twitter) { %>
+    <a
+      href="<%= artist.twitter %>"
+      target="_blank"
+      class="btn btn-outline-light btn-sm"
+      >Twitter</a
+    >
+    <% } %> <% if (artist.youtube) { %>
+    <a
+      href="<%= artist.youtube %>"
+      target="_blank"
+      class="btn btn-outline-light btn-sm"
+      >YouTube</a
+    >
+    <% } %>
+  </div>
+  <% } %>
+
+  <!-- Upcoming Events -->
+  <div class="mt-5">
+    <h4>Upcoming Events</h4>
+    <% if (events.length === 0) { %>
+    <p class="text-muted">No upcoming events.</p>
+    <% } else { %>
+    <div class="row">
+      <% events.forEach(event => { %>
+      <div class="col-md-4">
+        <div class="card bg-dark text-light my-2">
+          <img
+            src="<%= event.imageUrl || '/images/event-placeholder.jpg' %>"
+            class="card-img-top"
+          />
+          <div class="card-body">
+            <h5 class="card-title"><%= event.name %></h5>
+            <p>
+              <%= new Date(event.date).toDateString() %> - <%= event.location %>
+            </p>
+            <a
+              href="/events/<%= event.id %>"
+              class="btn btn-outline-primary w-100"
+              >View Event</a
+            >
+          </div>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+    <% } %>
+  </div>
 </div>
+
 <%- include('partials/footer') %>

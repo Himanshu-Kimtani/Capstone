@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <%- include('../partials/header') %>
+
+    <div class="container mt-5">
+      <div class="row event-detail-wrapper">
+        <div class="col-md-6 event-image-col">
+          <% if (event.picture || event.imageUrl) { %>
+          <img
+            src="<%= (event.imageUrl && event.imageUrl.startsWith('/')) ? event.imageUrl : '/uploads/events/' + (event.picture || event.imageUrl) %>"
+            class="event-image"
+            alt="<%= event.name %>"
+          />
+          <% } else { %>
+          <img
+            src="/images/default-event.jpg"
+            class="event-image"
+            alt="Default event image"
+          />
+          <% } %>
+        </div>
+
+        <div class="col-md-6 event-info-col">
+          <div class="event-heading">
+            <h1 class="event-name"><%= event.name %></h1>
+            <% if (event.genre) { %>
+            <span class="event-genre-badge"><%= event.genre %></span>
+            <% } %>
+          </div>
+
+          <div class="event-details">
+            <div class="event-detail-item">
+              <div class="detail-icon">
+                <i class="fas fa-user-circle"></i>
+              </div>
+              <div class="detail-content">
+                <h6>Artist</h6>
+                <% if (event.Artist) { %>
+                <a href="/artists/<%= event.Artist.id %>"
+                  ><%= event.Artist.name %></a
+                >
+                <% } else { %>
+                <span>TBA</span>
+                <% } %>
+              </div>
+            </div>
+
+            <div class="event-detail-item">
+              <div class="detail-icon">
+                <i class="fas fa-calendar-alt"></i>
+              </div>
+              <div class="detail-content">
+                <h6>Date & Time</h6>
+                <span
+                  ><%= new Date(event.date).toLocaleDateString('en-US', {
+                  weekday: 'long', year: 'numeric', month: 'long', day:
+                  'numeric' }) %> at <%= new
+                  Date(event.date).toLocaleTimeString('en-US', { hour:
+                  '2-digit', minute: '2-digit' }) %></span
+                >
+              </div>
+            </div>
+
+            <div class="event-detail-item">
+              <div class="detail-icon">
+                <i class="fas fa-map-marker-alt"></i>
+              </div>
+              <div class="detail-content">
+                <h6>Location</h6>
+                <span><%= event.location %></span>
+              </div>
+            </div>
+
+            <div class="event-detail-item">
+              <div class="detail-icon">
+                <i class="fas fa-ticket-alt"></i>
+              </div>
+              <div class="detail-content">
+                <h6>Price</h6>
+                <span class="event-price">$<%= event.price %></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="event-actions">
+            <% if (user) { %> <% if (typeof isBooked !== 'undefined' &&
+            isBooked) { %>
+            <button class="btn btn-success" disabled>
+              <i class="fas fa-check"></i> Already Booked
+            </button>
+            <% } else { %>
+            <form
+              action="/events/create-checkout-session/<%= event.id %>"
+              method="POST"
+            >
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-ticket-alt"></i> Book Ticket - $<%=
+                event.price.toFixed(2) %>
+              </button>
+            </form>
+            <% } %> <% } else { %>
+            <a href="/users/login" class="btn btn-outline-primary">
+              <i class="fas fa-sign-in-alt"></i> Login to Book Tickets
+            </a>
+            <% } %>
+          </div>
+
+          <div class="event-social mt-5">
+            <h6>Share this event</h6>
+            <div class="social-icons">
+              <a href="#" class="social-icon facebook"
+                ><i class="fab fa-facebook-f"></i
+              ></a>
+              <a href="#" class="social-icon twitter"
+                ><i class="fab fa-twitter"></i
+              ></a>
+              <a href="#" class="social-icon instagram"
+                ><i class="fab fa-instagram"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

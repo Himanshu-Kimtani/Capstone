@@ -1,0 +1,24 @@
+{
+  "name": "User Name",
+  "bio": "User Bio",
+  "photoUrl": "/uploads/profile/1743027232043-374065345.JPG",
+  "backgroundUrl": null,
+  "achievements": [],
+  "highlights": [
+    {
+      "url": "/uploads/highlights/1743025116394-114792565.jpg"
+    },
+    {
+      "url": "/uploads/highlights/1743025124412-816928099.jpg"
+    },
+    {
+      "url": "/uploads/highlights/1743025124438-919468779.jpg"
+    },
+    {
+      "url": "/uploads/highlights/1743025279163-967665023.jpg"
+    },
+    {
+      "url": "/uploads/highlights/1743025341573-93110350.jpg"
+    }
+  ]
+}

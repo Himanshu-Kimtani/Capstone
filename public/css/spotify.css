@@ -1,0 +1,253 @@
+/* Spotify Integration Styles */
+
+.spotify-section {
+  background: linear-gradient(135deg, #1e1e2f 0%, #2d2b42 100%);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 30px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.spotify-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.spotify-logo {
+  width: 32px;
+  height: 32px;
+  margin-right: 10px;
+}
+
+.spotify-title {
+  font-size: 1.5rem;
+  color: #1db954;
+  font-weight: 700;
+  margin: 0;
+}
+
+.spotify-connect-btn {
+  background-color: #1db954;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 50px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.spotify-connect-btn:hover {
+  background-color: #1ed760;
+  transform: translateY(-2px);
+}
+
+.spotify-connect-btn i {
+  margin-right: 8px;
+}
+
+/* Now Playing Section */
+.now-playing {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+}
+
+.album-art {
+  width: 80px;
+  height: 80px;
+  border-radius: 4px;
+  object-fit: cover;
+  margin-right: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.track-info {
+  flex: 1;
+}
+
+.track-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: white;
+  margin: 0 0 5px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.artist-name {
+  font-size: 0.9rem;
+  color: #b3b3b3;
+  margin: 0 0 10px 0;
+}
+
+.progress-container {
+  width: 100%;
+  height: 4px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  margin-bottom: 5px;
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: #1db954;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.time-display {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: #b3b3b3;
+}
+
+/* Player Controls */
+.player-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.control-button {
+  background-color: transparent;
+  color: white;
+  border: none;
+  font-size: 1.2rem;
+  margin: 0 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.control-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: scale(1.1);
+}
+
+.play-pause-button {
+  background-color: #1db954;
+  color: white;
+  font-size: 1.5rem;
+  width: 50px;
+  height: 50px;
+}
+
+.play-pause-button:hover {
+  background-color: #1ed760;
+}
+
+/* Playlists */
+.playlists-container {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.playlists-title {
+  color: white;
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+}
+
+.playlists-dropdown {
+  width: 100%;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+.playlists-dropdown option {
+  background-color: #2d2b42;
+  color: white;
+}
+
+.playlist-tracks {
+  max-height: 300px;
+  overflow-y: auto;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.tracks-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: white;
+}
+
+.tracks-table th,
+.tracks-table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tracks-table th {
+  color: #b3b3b3;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.tracks-table tr:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+}
+
+/* Scrollbar for playlist */
+.playlist-tracks::-webkit-scrollbar {
+  width: 8px;
+}
+
+.playlist-tracks::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.playlist-tracks::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.playlist-tracks::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .now-playing {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .album-art {
+    margin-right: 0;
+    margin-bottom: 15px;
+  }
+
+  .time-display {
+    justify-content: center;
+  }
+
+  .control-button {
+    margin: 0 5px;
+  }
+}

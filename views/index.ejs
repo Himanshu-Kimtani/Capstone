@@ -1,66 +1,264 @@
 <%- include('partials/header') %>
 
-<!-- Hero Section -->
-<section class="hero text-center position-relative">
-  <img
-    src="/images/hero-banner.jpg"
-    class="img-fluid hero-img"
-    alt="Concert Crowd"
-  />
-  <div class="hero-overlay">
-    <h1 class="fw-bold text-light">Feel the Beat,<br />Share the Moment</h1>
-    <p class="text-light">
-      Join the ultimate concert community for music lovers. Discover events,
-      connect with artists, and share your experiences.
-    </p>
-    <div class="mt-3">
-      <a href="/events" class="btn btn-lg btn-primary mx-2">Explore Events</a>
-      <a href="/users/signup" class="btn btn-lg btn-outline-light mx-2"
-        >Join Community</a
-      >
+<!-- Include this CSS style section in the head -->
+<style>
+  .event-image-wrapper {
+    position: relative;
+    height: 220px;
+    overflow: hidden;
+    border-radius: 12px 12px 0 0;
+  }
+
+  .event-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+
+  .event-image-wrapper img.error {
+    object-fit: contain;
+    background: linear-gradient(135deg, #4f46e5, #8b5cf6);
+  }
+
+  .event-card-modern {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 30px;
+    background-color: #1e1b4b;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .event-card-modern:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+  }
+
+  .event-card-content {
+    padding: 20px;
+  }
+
+  .event-title {
+    font-size: 1.25rem;
+    margin-bottom: 15px;
+    color: white;
+  }
+
+  .event-info {
+    margin-bottom: 20px;
+  }
+
+  .event-info-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    color: #a78bfa;
+  }
+
+  .event-info-item i {
+    margin-right: 10px;
+    width: 20px;
+    text-align: center;
+  }
+
+  .event-price-tag {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: linear-gradient(135deg, #4f46e5, #8b5cf6);
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-weight: bold;
+  }
+
+  .btn-view-event {
+    display: inline-block;
+    background: linear-gradient(135deg, #4f46e5, #8b5cf6);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+
+  .btn-view-event:hover {
+    background: linear-gradient(135deg, #8b5cf6, #4f46e5);
+    transform: translateY(-2px);
+    color: white;
+  }
+</style>
+
+<!-- Modern Hero Section -->
+<section class="modern-hero">
+  <div class="hero-waves"></div>
+  <div class="container hero-container">
+    <div class="row align-items-center">
+      <div class="col-lg-6 hero-content">
+        <h1 class="hero-title">
+          Feel the Beat, <br /><span class="hero-highlight"
+            >Share the Moment</span
+          >
+        </h1>
+        <p class="hero-subtitle">
+          Discover and book the hottest concerts and music events near you. Your
+          next unforgettable experience awaits.
+        </p>
+        <div class="hero-cta">
+          <a href="/events" class="btn btn-glow">Explore Events</a>
+          <a href="/users/signup" class="btn btn-outline-light"
+            >Join Community</a
+          >
+        </div>
+      </div>
+      <div class="col-lg-6 d-none d-lg-block">
+        <div class="hero-image-container">
+          <img
+            src="/images/hero-banner.jpg"
+            alt="Concert Experience"
+            class="hero-image"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- Featured Events Section -->
-<section class="container my-5">
-  <h2 class="text-center text-purple fw-bold">Trending Events</h2>
-  <div class="row">
-    <% events.forEach(event => { %>
-    <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
-      <div class="card bg-dark text-light event-card">
-        <img
-          src="<%= event.imageUrl %>"
-          class="card-img-top event-img"
-          alt="<%= event.name %>"
-        />
-        <div class="card-body">
-          <h5 class="card-title"><%= event.name %></h5>
-          <p class="event-date"><%= event.date %> • <%= event.time %></p>
-          <p class="event-venue">
-            <i class="fas fa-map-marker-alt"></i> <%= event.venue %>
-          </p>
-          <p class="event-price"><strong>From $<%= event.price %></strong></p>
-          <a
-            href="/event/<%= event.id %>"
-            class="btn btn-sm btn-outline-light w-100"
-            >View Details</a
-          >
+<section class="featured-events">
+  <div class="container">
+    <div class="section-header">
+      <h2>Featured Events</h2>
+      <p>Don't miss out on these amazing performances</p>
+    </div>
+
+    <div class="row">
+      <% events.forEach(event => { %>
+      <div class="col-lg-4 col-md-6 mb-4">
+        <div class="event-card-modern">
+          <div class="event-image-wrapper">
+            <img
+              src="<%= (event.imageUrl && event.imageUrl.startsWith('/')) ? event.imageUrl : '/uploads/events/' + (event.picture || event.imageUrl || 'default.jpg') %>"
+              alt="<%= event.name %>"
+              onerror="this.src='/images/default-event.jpg'"
+            />
+            <span class="event-price-tag"
+              >$<%= typeof event.price === 'string' ?
+              parseFloat(event.price).toFixed(2) : event.price.toFixed(2)
+              %></span
+            >
+          </div>
+          <div class="event-card-content">
+            <h3 class="event-title"><%= event.name %></h3>
+            <div class="event-info">
+              <div class="event-info-item">
+                <i class="far fa-calendar-alt"></i>
+                <span
+                  ><%= new Date(event.date).toLocaleDateString('en-US', {month:
+                  'short', day: 'numeric', year: 'numeric'}) %></span
+                >
+              </div>
+              <div class="event-info-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <span><%= event.location %></span>
+              </div>
+              <% if (event.Artist) { %>
+              <div class="event-info-item">
+                <i class="fas fa-user"></i>
+                <span><%= event.Artist.name %></span>
+              </div>
+              <% } %>
+            </div>
+            <a href="/events/<%= event.id %>" class="btn-view-event"
+              >Get Tickets <i class="fas fa-arrow-right"></i
+            ></a>
+          </div>
         </div>
       </div>
+      <% }) %>
     </div>
-    <% }) %>
+
+    <div class="text-center mt-4">
+      <a href="/events" class="btn btn-view-all">View All Events</a>
+    </div>
   </div>
 </section>
 
-<!-- Call-to-Action Section -->
-<section class="cta-section text-center py-5">
-  <h2 class="text-light fw-bold">Join the VYNYL Community</h2>
-  <p class="text-light">
-    Connect with fellow music lovers, discover new artists, and never miss
-    another beat.
-  </p>
-  <a href="/users/signup" class="btn btn-lg btn-primary mt-3">Create Account</a>
+<!-- Features Section -->
+<section class="features-section">
+  <div class="container">
+    <div class="section-header light">
+      <h2>Why Choose VYNYL</h2>
+      <p>The best place to discover and experience live music</p>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-music"></i>
+          </div>
+          <h3>Diverse Events</h3>
+          <p>
+            From intimate gigs to massive festivals, find the perfect event for
+            your taste.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-star"></i>
+          </div>
+          <h3>Exclusive Access</h3>
+          <p>
+            Get early access to tickets and special VIP experiences for your
+            favorite artists.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-ticket-alt"></i>
+          </div>
+          <h3>Easy Booking</h3>
+          <p>
+            Simple and secure ticket booking process with instant confirmation.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
+
+<!-- Join Community CTA Section -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-content">
+      <h2>Ready to Experience the Music?</h2>
+      <p>Join our community of music lovers and never miss a beat!</p>
+      <a href="/users/signup" class="btn btn-glow btn-lg">Join Now</a>
+    </div>
+  </div>
+</section>
+
+<!-- Add this script at the bottom of the file before the footer -->
+<script>
+  // Handle image loading errors
+  document.addEventListener("DOMContentLoaded", function () {
+    const eventImages = document.querySelectorAll(".event-image-wrapper img");
+    eventImages.forEach((img) => {
+      img.addEventListener("error", function () {
+        this.classList.add("error");
+      });
+    });
+  });
+</script>
 
 <%- include('partials/footer') %>

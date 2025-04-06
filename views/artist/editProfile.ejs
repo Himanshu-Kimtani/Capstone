@@ -1,0 +1,301 @@
+<%- include('../partials/header') %>
+
+<div class="container mt-4">
+  <div class="row mb-4">
+    <div class="col-md-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <h2 class="text-primary-accent">Edit Artist Profile</h2>
+        <div>
+          <a href="/artist/dashboard" class="btn btn-outline-accent me-2">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+          </a>
+          <a href="/artist/profile" class="btn btn-gradient-primary">
+            <i class="fas fa-eye"></i> View Profile
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Flash Messages -->
+  <% if (typeof messages !== 'undefined' && messages.error) { %>
+    <div class="alert bg-dark-surface text-error border-0 shadow-sm">
+      <i class="fas fa-exclamation-circle"></i> <%= messages.error %>
+    </div>
+  <% } %>
+
+  <% if (typeof messages !== 'undefined' && messages.success) { %>
+    <div class="alert bg-dark-surface text-success border-0 shadow-sm">
+      <i class="fas fa-check-circle"></i> <%= messages.success %>
+    </div>
+  <% } %>
+
+  <div class="row">
+    <div class="col-md-4 mb-4">
+      <!-- Profile Picture Section -->
+      <div class="card bg-dark-surface border-0 shadow-soft">
+        <div class="card-header border-bottom border-accent">
+          <h4 class="text-accent mb-0">Profile Picture</h4>
+        </div>
+        <div class="card-body text-center">
+          <% if (artist.picture) { %>
+            <img src="/uploads/artists/<%= artist.picture %>" alt="<%= artist.name %>" class="rounded-circle border border-2 border-accent mb-3" style="width: 200px; height: 200px; object-fit: cover;">
+          <% } else { %>
+            <div class="rounded-circle bg-gradient-accent d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 200px; height: 200px;">
+              <span class="text-white" style="font-size: 5rem;"><%= artist.name.charAt(0).toUpperCase() %></span>
+            </div>
+          <% } %>
+          
+          <form action="/artist/profile/picture" method="POST" enctype="multipart/form-data">
+            <div class="mb-3">
+              <label for="picture" class="form-label text-accent">Update Profile Picture</label>
+              <input type="file" class="form-control bg-dark-input text-light border-dark" id="picture" name="picture" accept="image/*">
+              <div class="form-text text-muted mt-2">
+                <i class="fas fa-info-circle"></i> Select a new image to update your profile picture.
+              </div>
+            </div>
+            <button type="submit" class="btn btn-gradient-primary w-100">
+              <i class="fas fa-upload"></i> Upload New Picture
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-8">
+      <!-- Profile Details Form -->
+      <div class="card bg-dark-surface border-0 shadow-soft">
+        <div class="card-header border-bottom border-accent">
+          <h4 class="text-accent mb-0">Profile Details</h4>
+        </div>
+        <div class="card-body">
+          <form action="/artist/profile/update" method="POST">
+            <div class="mb-4">
+              <label for="name" class="form-label text-accent">Artist Name</label>
+              <input type="text" class="form-control bg-dark-input text-light border-dark" id="name" name="name" value="<%= artist.name %>" required>
+            </div>
+
+            <div class="mb-4">
+              <label for="genre" class="form-label text-accent">Genre</label>
+              <select class="form-select bg-dark-input text-light border-dark" id="genre" name="genre" required>
+                <option value="" selected disabled>Select a genre</option>
+                <option value="rock" <%= artist.genre === 'rock' ? 'selected' : '' %>>Rock</option>
+                <option value="pop" <%= artist.genre === 'pop' ? 'selected' : '' %>>Pop</option>
+                <option value="jazz" <%= artist.genre === 'jazz' ? 'selected' : '' %>>Jazz</option>
+                <option value="blues" <%= artist.genre === 'blues' ? 'selected' : '' %>>Blues</option>
+                <option value="electronic" <%= artist.genre === 'electronic' ? 'selected' : '' %>>Electronic</option>
+                <option value="classical" <%= artist.genre === 'classical' ? 'selected' : '' %>>Classical</option>
+                <option value="hiphop" <%= artist.genre === 'hiphop' ? 'selected' : '' %>>Hip Hop</option>
+                <option value="country" <%= artist.genre === 'country' ? 'selected' : '' %>>Country</option>
+                <option value="other" <%= artist.genre === 'other' ? 'selected' : '' %>>Other</option>
+              </select>
+            </div>
+
+            <div class="mb-4">
+              <label for="bio" class="form-label text-accent">Biography</label>
+              <textarea class="form-control bg-dark-input text-light border-dark" id="bio" name="bio" rows="5"><%= artist.bio || '' %></textarea>
+              <div class="form-text text-muted mt-2">
+                <i class="fas fa-music"></i> Tell fans about yourself, your music style, and your journey.
+              </div>
+            </div>
+
+            <div class="card bg-dark-input border-accent-soft mb-4">
+              <div class="card-header bg-dark-surface border-bottom border-accent-soft">
+                <h5 class="text-accent mb-0">
+                  <i class="fas fa-share-alt"></i> Social Media Links
+                </h5>
+              </div>
+              <div class="card-body">
+                <p class="text-muted mb-4">Add your social media profiles to help fans connect with you.</p>
+
+                <% 
+                  let social = {};
+                  try {
+                    if (artist.socialMedia) {
+                      social = typeof artist.socialMedia === 'string' 
+                        ? JSON.parse(artist.socialMedia) 
+                        : artist.socialMedia;
+                    }
+                  } catch (e) {
+                    console.error("Error parsing social media:", e);
+                    social = {};
+                  }
+                %>
+
+                <div class="mb-3">
+                  <label for="instagram" class="form-label text-accent">
+                    <i class="fab fa-instagram"></i> Instagram URL
+                  </label>
+                  <input type="url" class="form-control bg-dark-input text-light border-dark" id="instagram" name="socialMedia[instagram]" value="<%= social.instagram || '' %>">
+                </div>
+
+                <div class="mb-3">
+                  <label for="twitter" class="form-label text-accent">
+                    <i class="fab fa-twitter"></i> Twitter URL
+                  </label>
+                  <input type="url" class="form-control bg-dark-input text-light border-dark" id="twitter" name="socialMedia[twitter]" value="<%= social.twitter || '' %>">
+                </div>
+
+                <div class="mb-3">
+                  <label for="youtube" class="form-label text-accent">
+                    <i class="fab fa-youtube"></i> YouTube Channel URL
+                  </label>
+                  <input type="url" class="form-control bg-dark-input text-light border-dark" id="youtube" name="socialMedia[youtube]" value="<%= social.youtube || '' %>">
+                </div>
+
+                <div class="mb-3">
+                  <label for="spotify" class="form-label text-accent">
+                    <i class="fab fa-spotify"></i> Spotify Artist URL
+                  </label>
+                  <input type="url" class="form-control bg-dark-input text-light border-dark" id="spotify" name="socialMedia[spotify]" value="<%= social.spotify || '' %>">
+                </div>
+
+                <div class="mb-3">
+                  <label for="website" class="form-label text-accent">
+                    <i class="fas fa-globe"></i> Personal Website
+                  </label>
+                  <input type="url" class="form-control bg-dark-input text-light border-dark" id="website" name="socialMedia[website]" value="<%= social.website || '' %>">
+                </div>
+              </div>
+            </div>
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+              <a href="/artist/profile" class="btn btn-outline-accent me-2">Cancel</a>
+              <button type="submit" class="btn btn-gradient-primary px-4">
+                <i class="fas fa-save"></i> Save Changes
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Professional Color Palette */
+  :root {
+    --color-primary: #4f46e5;
+    --color-primary-dark: #4338ca;
+    --color-accent: #8b5cf6;
+    --color-accent-light: #a78bfa;
+    --color-success: #10b981;
+    --color-error: #ef4444;
+    --color-dark-surface: #1e1b4b;
+    --color-dark-input: #1e1e2d;
+    --color-border-dark: #2d2b42;
+  }
+
+  /* Background Colors */
+  .bg-dark-surface {
+    background-color: var(--color-dark-surface);
+  }
+
+  .bg-dark-input {
+    background-color: var(--color-dark-input);
+  }
+
+  /* Text Colors */
+  .text-primary-accent {
+    color: var(--color-primary);
+  }
+
+  .text-accent {
+    color: var(--color-accent-light);
+  }
+
+  .text-success {
+    color: var(--color-success);
+  }
+
+  .text-error {
+    color: var(--color-error);
+  }
+
+  /* Borders */
+  .border-accent {
+    border-color: var(--color-accent) !important;
+  }
+
+  .border-accent-soft {
+    border-color: rgba(139, 92, 246, 0.2) !important;
+  }
+
+  .border-dark {
+    border-color: var(--color-border-dark) !important;
+  }
+
+  /* Gradients */
+  .bg-gradient-primary {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  }
+
+  .bg-gradient-accent {
+    background: linear-gradient(135deg, var(--color-accent), var(--color-primary-dark));
+  }
+
+  /* Buttons */
+  .btn-gradient-primary {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+    border: none;
+    color: white;
+    transition: all 0.3s ease;
+  }
+
+  .btn-gradient-primary:hover {
+    background: linear-gradient(135deg, var(--color-accent), var(--color-primary));
+    transform: translateY(-1px);
+    color: white;
+  }
+
+  .btn-outline-accent {
+    color: var(--color-accent-light);
+    border-color: var(--color-accent);
+    transition: all 0.3s ease;
+  }
+
+  .btn-outline-accent:hover {
+    background-color: var(--color-accent);
+    color: white;
+    transform: translateY(-1px);
+  }
+
+  /* Cards & Shadows */
+  .card {
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+  }
+
+  .shadow-soft {
+    box-shadow: 0 4px 20px rgba(79, 70, 229, 0.1) !important;
+  }
+
+  /* Form Controls */
+  .form-control, .form-select {
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+
+  .form-control:focus, .form-select:focus {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 0.25rem rgba(139, 92, 246, 0.15);
+  }
+
+  /* Hover Effects */
+  .card:hover {
+    transform: translateY(-2px);
+  }
+
+  /* Animations */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card {
+    animation: fadeIn 0.5s ease-out;
+  }
+</style>
+
+<%- include('../partials/footer') %> 

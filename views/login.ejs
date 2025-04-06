@@ -2,24 +2,43 @@
 
 <div class="auth-container">
   <h3>Login to Your Account</h3>
+  
+  <!-- Add this debug section -->
+  <% if (locals.error && error.length > 0) { %>
+    <div class="alert alert-danger">
+      <%= error %>
+    </div>
+  <% } %>
+  
+  <!-- Add this to check session -->
+  <% if (locals.user) { %>
+    <div>
+      Currently logged in as: <%= user.email %>
+    </div>
+  <% } %>
 
   <form action="/users/login" method="POST">
-    <input type="email" name="email" placeholder="Enter your email" required />
-    <input
-      type="password"
-      name="password"
-      placeholder="Enter your password"
-      required
-    />
-
-    <div class="form-actions">
-      <label><input type="checkbox" /> Remember me</label>
+    <div>
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
     </div>
-
-    <button type="submit" class="btn-auth">Login</button>
-
-    <p>Not a member? <a href="/users/signup">Signup Now</a></p>
+    <div>
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required>
+    </div>
+    <button type="submit">Login</button>
   </form>
+
+  <!-- Add error display -->
+  <% if (locals.error) { %>
+    <div style="color: red;">
+      <%= error %>
+    </div>
+  <% } %>
+
+  <div class="text-center mt-3">
+    <p>Don't have an account? <a href="/users/signup" class="text-info">Sign Up</a></p>
+  </div>
 </div>
 
 <%- include('partials/footer') %>

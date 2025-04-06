@@ -3,22 +3,44 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "setup": "node scripts/setupDirectories.js",
+    "start": "node server.js",
+    "dev": "node scripts/setupDirectories.js && nodemon server.js",
+    "create-admin": "node scripts/createAdmin.js",
+    "db:init": "node scripts/initialize-db.js"
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "axios": "^1.8.4",
     "bcrypt": "^5.1.1",
+    "bcryptjs": "^3.0.2",
     "body-parser": "^1.20.3",
     "connect-flash": "^0.1.1",
+    "connect-mongo": "^5.1.0",
+    "connect-pg-simple": "^10.0.0",
+    "connect-session-sequelize": "^7.1.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "ejs": "^3.1.10",
     "express": "^4.21.2",
+    "express-flash": "^0.0.2",
     "express-session": "^1.18.1",
     "jsonwebtoken": "^9.0.2",
-    "pg": "^8.13.3",
-    "sequelize": "^6.37.5"
+    "method-override": "^3.0.0",
+    "mongoose": "^8.13.0",
+    "multer": "^1.4.5-lts.1",
+    "pg": "^8.14.1",
+    "sequelize": "^6.32.1",
+    "sharp": "^0.32.4",
+    "socket.io": "^4.8.1",
+    "spotify-web-api-node": "^5.0.2",
+    "stripe": "^18.0.0",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
   }
 }

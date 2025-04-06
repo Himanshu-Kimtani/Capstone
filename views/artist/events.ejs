@@ -1,0 +1,343 @@
+<%- include('../partials/header') %>
+
+<div class="container mt-4">
+  <div class="row mb-4">
+    <div class="col-md-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <h2 class="text-purple">My Events</h2>
+        <div>
+          <a href="/artist/events/create" class="btn btn-gradient-purple me-2">
+            <i class="fas fa-plus"></i> Add Event
+          </a>
+          <a href="/artist/dashboard" class="btn btn-outline-light">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Flash Messages -->
+  <% if (typeof messages !== 'undefined' && messages.error) { %>
+  <div class="alert alert-danger"><%= messages.error %></div>
+  <% } %> <% if (typeof messages !== 'undefined' && messages.success) { %>
+  <div class="alert alert-success"><%= messages.success %></div>
+  <% } %>
+
+  <!-- Pending Events Section -->
+  <div class="card bg-dark-purple border-0 shadow mb-4">
+    <div
+      class="card-header border-bottom border-purple d-flex justify-content-between align-items-center"
+    >
+      <h4 class="text-purple-light mb-0">Pending Events</h4>
+      <span class="badge bg-gradient-blue">Awaiting Approval</span>
+    </div>
+    <div class="card-body">
+      <% const pendingEvents = events.filter(event => event.status ===
+      'pending'); if (pendingEvents && pendingEvents.length > 0) { %>
+      <div class="table-responsive">
+        <table class="table table-dark table-striped table-hover border-purple">
+          <thead class="bg-dark-purple">
+            <tr>
+              <th>Event Name</th>
+              <th>Date</th>
+              <th>Location</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% pendingEvents.forEach(event => { %>
+            <tr>
+              <td class="text-purple-light"><%= event.name %></td>
+              <td><%= new Date(event.date).toLocaleDateString() %></td>
+              <td><%= event.location %></td>
+              <td>
+                <span class="badge bg-gradient-blue">Pending</span>
+              </td>
+              <td>
+                <a
+                  href="/events/<%= event.id %>"
+                  class="btn btn-sm btn-outline-purple me-1"
+                >
+                  <i class="fas fa-eye"></i>
+                </a>
+                <a
+                  href="/artist/events/<%= event.id %>/edit"
+                  class="btn btn-sm btn-outline-light me-1"
+                >
+                  <i class="fas fa-edit"></i>
+                </a>
+                <button
+                  class="btn btn-sm btn-outline-danger"
+                  data-bs-toggle="modal"
+                  data-bs-target="#deleteEventModal<%= event.id %>"
+                >
+                  <i class="fas fa-trash"></i>
+                </button>
+
+                <!-- Delete Modal -->
+                <div
+                  class="modal fade"
+                  id="deleteEventModal<%= event.id %>"
+                  tabindex="-1"
+                >
+                  <div class="modal-dialog">
+                    <div class="modal-content bg-dark-purple text-white">
+                      <div class="modal-header border-bottom border-purple">
+                        <h5 class="modal-title text-purple-light">
+                          Confirm Delete
+                        </h5>
+                        <button
+                          type="button"
+                          class="btn-close btn-close-white"
+                          data-bs-dismiss="modal"
+                        ></button>
+                      </div>
+                      <div class="modal-body">
+                        Are you sure you want to delete "<%= event.name %>"?
+                        This cannot be undone.
+                      </div>
+                      <div class="modal-footer border-top border-purple">
+                        <button
+                          type="button"
+                          class="btn btn-outline-light"
+                          data-bs-dismiss="modal"
+                        >
+                          Cancel
+                        </button>
+                        <form
+                          action="/artist/events/<%= event.id %>/delete"
+                          method="POST"
+                        >
+                          <button type="submit" class="btn btn-danger">
+                            Delete
+                          </button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+      <% } else { %>
+      <div class="alert bg-dark-purple text-purple-light border-0">
+        You don't have any pending events awaiting approval.
+      </div>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- Approved Events Section -->
+  <div class="card bg-dark-purple border-0 shadow">
+    <div
+      class="card-header border-bottom border-purple d-flex justify-content-between align-items-center"
+    >
+      <h4 class="text-purple-light mb-0">Approved Events</h4>
+      <span class="badge bg-purple-light">Live</span>
+    </div>
+    <div class="card-body">
+      <% const approvedEvents = events.filter(event => event.status ===
+      'approved'); if (approvedEvents && approvedEvents.length > 0) { %>
+      <div class="table-responsive">
+        <table class="table table-dark table-striped table-hover border-purple">
+          <thead class="bg-dark-purple">
+            <tr>
+              <th>Event Name</th>
+              <th>Date</th>
+              <th>Location</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% approvedEvents.forEach(event => { %>
+            <tr>
+              <td class="text-purple-light"><%= event.name %></td>
+              <td><%= new Date(event.date).toLocaleDateString() %></td>
+              <td><%= event.location %></td>
+              <td>
+                <span class="badge bg-purple-light">Approved</span>
+              </td>
+              <td>
+                <a
+                  href="/events/<%= event.id %>"
+                  class="btn btn-sm btn-outline-purple"
+                >
+                  <i class="fas fa-eye"></i> View
+                </a>
+              </td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+      <% } else { %>
+      <div class="alert bg-dark-purple text-purple-light border-0">
+        You don't have any approved events yet.
+      </div>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- Event Statistics -->
+  <div class="row mt-4">
+    <div class="col-md-4">
+      <div class="card bg-gradient-purple text-white mb-4 border-0 shadow">
+        <div class="card-body text-center">
+          <h5 class="card-title">Total Events</h5>
+          <p class="display-4"><%= events.length %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card bg-gradient-blue text-white mb-4 border-0 shadow">
+        <div class="card-body text-center">
+          <h5 class="card-title">Pending Events</h5>
+          <p class="display-4"><%= pendingEvents.length %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card bg-gradient-dark text-white mb-4 border-0 shadow">
+        <div class="card-body text-center">
+          <h5 class="card-title">Approved Events</h5>
+          <p class="display-4"><%= approvedEvents.length %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .bg-dark-purple {
+    background-color: #1e1a2b;
+  }
+
+  .bg-purple {
+    background-color: #7c4dff;
+  }
+
+  .text-purple {
+    color: #9775fa;
+  }
+
+  .text-purple-light {
+    color: #d0bfff;
+  }
+
+  .border-purple {
+    border-color: #7c4dff !important;
+  }
+
+  .btn-purple {
+    background-color: #7c4dff;
+    color: white;
+  }
+
+  .btn-purple:hover {
+    background-color: #9775fa;
+    color: white;
+  }
+
+  .btn-gradient-purple {
+    background: linear-gradient(45deg, #7c4dff, #b388ff);
+    border: none;
+    color: white;
+  }
+
+  .btn-outline-purple {
+    color: #d0bfff;
+    border-color: #7c4dff;
+  }
+
+  .btn-outline-purple:hover {
+    background-color: #7c4dff;
+    color: white;
+  }
+
+  .btn-outline-light {
+    color: #ffffff;
+    border-color: #d0bfff;
+  }
+
+  .btn-outline-light:hover {
+    background-color: #d0bfff;
+    color: #1e1a2b;
+  }
+
+  .card {
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: #272235;
+    border: 1px solid #7c4dff;
+  }
+
+  .shadow {
+    box-shadow: 0 4px 20px rgba(124, 77, 255, 0.2) !important;
+  }
+
+  /* Table styles for better contrast */
+  .table-dark {
+    color: #f8f9fa;
+    background-color: #272235;
+  }
+
+  .table-dark thead.bg-dark-purple {
+    background-color: #272235;
+    color: #d0bfff;
+  }
+
+  .table-dark.table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: #1e1a2b;
+  }
+
+  .table-dark.table-hover tbody tr:hover {
+    background-color: #33285a;
+  }
+
+  .table.border-purple {
+    border: 1px solid #7c4dff;
+  }
+
+  .badge.bg-purple {
+    background-color: #7c4dff !important;
+    color: white;
+  }
+
+  .badge.bg-yellow {
+    background-color: #ffab40 !important;
+    color: #272235;
+  }
+
+  /* Modal styles */
+  .modal-content {
+    background-color: #272235;
+    color: #f8f9fa;
+    border: 1px solid #7c4dff;
+  }
+
+  .modal-header,
+  .modal-footer {
+    border-color: #414141;
+  }
+
+  .section-heading {
+    border-bottom: 2px solid #7c4dff;
+    color: #d0bfff;
+    padding-bottom: 8px;
+  }
+
+  /* Make empty state messages more visible */
+  .empty-state {
+    background-color: #272235;
+    border: 1px dashed #7c4dff;
+    color: #d0bfff;
+  }
+</style>
+
+<%- include('../partials/footer') %>

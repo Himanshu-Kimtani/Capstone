@@ -1,0 +1,356 @@
+<%- include('../partials/header.ejs') %>
+
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-lg-8 mx-auto">
+      <div class="card bg-dark-purple border-0 shadow">
+        <div
+          class="card-header bg-gradient-purple d-flex justify-content-between align-items-center"
+        >
+          <h2 class="text-white mb-0">Moment Details</h2>
+          <a href="/moments/gallery" class="btn btn-outline-light">
+            <i class="fas fa-arrow-left me-2"></i> Back to Gallery
+          </a>
+        </div>
+        <div class="card-body">
+          <% if (error && error.length > 0) { %>
+          <div class="alert alert-danger" role="alert"><%= error %></div>
+          <% } %> <% if (success && success.length > 0) { %>
+          <div class="alert alert-success" role="alert"><%= success %></div>
+          <% } %>
+
+          <!-- User and Timestamp -->
+          <div class="d-flex align-items-center mb-3">
+            <div class="user-avatar me-3">
+              <% if (moment.User && moment.User.profilePhoto) { %>
+              <img
+                src="/uploads/profile/<%= moment.User.profilePhoto %>"
+                alt="<%= moment.User.name %>"
+              />
+              <% } else { %>
+              <div class="avatar-placeholder">
+                <%= moment.User ? moment.User.name.charAt(0) : 'U' %>
+              </div>
+              <% } %>
+            </div>
+            <div>
+              <h5 class="mb-0 text-light">
+                <%= moment.User ? moment.User.name : 'User' %>
+              </h5>
+              <small class="text-muted"><%= timeAgo %></small>
+            </div>
+          </div>
+
+          <!-- Media Content -->
+          <div class="moment-media-container mb-4">
+            <% if (moment.mediaType === 'image') { %>
+            <img
+              src="/uploads/moments/<%= moment.mediaUrl %>"
+              class="moment-media"
+              alt="Moment"
+            />
+            <% } else { %>
+            <video
+              src="/uploads/moments/<%= moment.mediaUrl %>"
+              class="moment-media"
+              controls
+            ></video>
+            <% } %>
+          </div>
+
+          <!-- Caption -->
+          <% if (moment.caption) { %>
+          <div class="mb-4">
+            <p class="text-light fs-5"><%= moment.caption %></p>
+          </div>
+          <% } %>
+
+          <!-- Tags and Details -->
+          <div class="mb-4">
+            <div class="row">
+              <% if (moment.Artist) { %>
+              <div class="col-md-4 mb-2">
+                <div class="d-flex align-items-center">
+                  <i class="fas fa-music text-purple-light me-2"></i>
+                  <div>
+                    <small class="text-muted">Artist</small>
+                    <p class="mb-0 text-light"><%= moment.Artist.name %></p>
+                  </div>
+                </div>
+              </div>
+              <% } %> <% if (moment.Event) { %>
+              <div class="col-md-4 mb-2">
+                <div class="d-flex align-items-center">
+                  <i class="fas fa-calendar-alt text-purple-light me-2"></i>
+                  <div>
+                    <small class="text-muted">Event</small>
+                    <p class="mb-0 text-light"><%= moment.Event.name %></p>
+                  </div>
+                </div>
+              </div>
+              <% } %> <% if (moment.location) { %>
+              <div class="col-md-4 mb-2">
+                <div class="d-flex align-items-center">
+                  <i class="fas fa-map-marker-alt text-purple-light me-2"></i>
+                  <div>
+                    <small class="text-muted">Location</small>
+                    <p class="mb-0 text-light"><%= moment.location %></p>
+                  </div>
+                </div>
+              </div>
+              <% } %>
+            </div>
+          </div>
+
+          <!-- Engagement Stats -->
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex">
+              <div class="me-4">
+                <i
+                  class="<%= userLiked ? 'fas' : 'far' %> fa-heart text-purple-light"
+                ></i>
+                <span class="ms-2 text-light"><%= likeCount %> likes</span>
+              </div>
+              <div>
+                <i class="far fa-comment text-purple-light"></i>
+                <span class="ms-2 text-light"
+                  ><%= moment.MomentComments ? moment.MomentComments.length : 0
+                  %> comments</span
+                >
+              </div>
+            </div>
+
+            <% if (user && (user.id === moment.userId || user.role === 'admin'))
+            { %>
+            <form
+              action="/moments/<%= moment.id %>/delete"
+              method="POST"
+              onsubmit="return confirm('Are you sure you want to delete this moment?');"
+            >
+              <button type="submit" class="btn btn-outline-danger">
+                <i class="fas fa-trash me-2"></i> Delete
+              </button>
+            </form>
+            <% } %>
+          </div>
+
+          <!-- Like Button -->
+          <% if (user) { %>
+          <div class="d-flex justify-content-between mb-4">
+            <button
+              class="btn <%= userLiked ? 'btn-purple' : 'btn-outline-purple' %> w-100 me-2"
+              id="likeBtn"
+              data-moment-id="<%= moment.id %>"
+            >
+              <i class="<%= userLiked ? 'fas' : 'far' %> fa-heart me-2"></i>
+              <%= userLiked ? 'Liked' : 'Like' %>
+            </button>
+          </div>
+          <% } %>
+
+          <!-- Comments Section -->
+          <div class="mt-4">
+            <h4 class="text-light mb-3">Comments</h4>
+
+            <% if (user) { %>
+            <form
+              action="/moments/<%= moment.id %>/comment"
+              method="POST"
+              class="mb-4"
+            >
+              <div class="input-group">
+                <input
+                  type="text"
+                  name="content"
+                  class="form-control bg-dark text-light border-secondary"
+                  placeholder="Add a comment..."
+                  required
+                />
+                <button type="submit" class="btn btn-gradient-purple">
+                  <i class="fas fa-paper-plane"></i>
+                </button>
+              </div>
+            </form>
+            <% } else { %>
+            <div class="alert alert-info mb-4">
+              <i class="fas fa-info-circle me-2"></i>
+              <a href="/users/login" class="text-decoration-none">Login</a> to
+              like or comment on this moment.
+            </div>
+            <% } %>
+
+            <!-- Comments List -->
+            <div class="comments-list">
+              <% if (moment.MomentComments && moment.MomentComments.length > 0)
+              { %> <% moment.MomentComments.forEach(comment => { %>
+              <div class="comment-item bg-dark p-3 mb-3 rounded">
+                <div class="d-flex">
+                  <div class="comment-user-avatar me-2">
+                    <% if (comment.User && comment.User.profilePhoto) { %>
+                    <img
+                      src="/uploads/profile/<%= comment.User.profilePhoto %>"
+                      alt="<%= comment.User.name %>"
+                    />
+                    <% } else { %>
+                    <div class="avatar-placeholder">
+                      <%= comment.User ? comment.User.name.charAt(0) : 'U' %>
+                    </div>
+                    <% } %>
+                  </div>
+                  <div class="flex-grow-1">
+                    <div class="d-flex justify-content-between">
+                      <h6 class="mb-0 text-light">
+                        <%= comment.User ? comment.User.name : 'User' %>
+                      </h6>
+                      <small class="text-muted"
+                        ><%= new Date(comment.createdAt).toLocaleString()
+                        %></small
+                      >
+                    </div>
+                    <p class="mb-0 text-light mt-1"><%= comment.content %></p>
+                  </div>
+                </div>
+              </div>
+              <% }); %> <% } else { %>
+              <div class="text-center text-muted py-3">
+                <i class="far fa-comment-dots me-2"></i>
+                No comments yet. Be the first to comment!
+              </div>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .moment-media-container {
+    width: 100%;
+    max-height: 600px;
+    overflow: hidden;
+    border-radius: 8px;
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+
+  .moment-media {
+    width: 100%;
+    max-height: 600px;
+    object-fit: contain;
+  }
+
+  .user-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+
+  .comment-user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+
+  .user-avatar img,
+  .comment-user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #6a3093, #a044ff);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+  }
+
+  /* Custom colors */
+  .bg-dark-purple {
+    background-color: #1e1a2b;
+  }
+
+  .bg-gradient-purple {
+    background: linear-gradient(45deg, #6a3093, #a044ff);
+  }
+
+  .text-purple-light {
+    color: #b388ff;
+  }
+
+  .btn-outline-purple {
+    color: #b388ff;
+    border-color: #b388ff;
+  }
+
+  .btn-outline-purple:hover {
+    background-color: #b388ff;
+    color: #1e1a2b;
+  }
+
+  .btn-purple {
+    background-color: #b388ff;
+    color: #1e1a2b;
+    border-color: #b388ff;
+  }
+
+  .btn-gradient-purple {
+    background: linear-gradient(45deg, #6a3093, #a044ff);
+    border: none;
+    color: white;
+  }
+
+  .btn-gradient-purple:hover {
+    background: linear-gradient(45deg, #7b52a7, #b366ff);
+    color: white;
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const likeBtn = document.getElementById("likeBtn");
+
+    if (likeBtn) {
+      likeBtn.addEventListener("click", function () {
+        const momentId = this.dataset.momentId;
+
+        fetch(`/moments/${momentId}/like`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              // Update UI based on like status
+              if (data.liked) {
+                likeBtn.innerHTML = '<i class="fas fa-heart me-2"></i> Liked';
+                likeBtn.classList.remove("btn-outline-purple");
+                likeBtn.classList.add("btn-purple");
+              } else {
+                likeBtn.innerHTML = '<i class="far fa-heart me-2"></i> Like';
+                likeBtn.classList.remove("btn-purple");
+                likeBtn.classList.add("btn-outline-purple");
+              }
+
+              // Refresh page to update counts
+              window.location.reload();
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      });
+    }
+  });
+</script>
+
+<%- include('../partials/footer.ejs') %>

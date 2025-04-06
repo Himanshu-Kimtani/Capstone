@@ -1,0 +1,260 @@
+<%- include('../partials/header.ejs') %>
+
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-lg-10 mx-auto">
+      <div class="card bg-dark-purple border-0 shadow">
+        <div
+          class="card-header bg-gradient-purple d-flex justify-content-between align-items-center"
+        >
+          <h2 class="text-white mb-0">My Moments</h2>
+          <div>
+            <a href="/moments/new" class="btn btn-light me-2">
+              <i class="fas fa-plus-circle me-2"></i> Share New Moment
+            </a>
+            <a href="/users/dashboard" class="btn btn-outline-light">
+              <i class="fas fa-arrow-left me-2"></i> Back to Dashboard
+            </a>
+          </div>
+        </div>
+        <div class="card-body">
+          <% if (error && error.length > 0) { %>
+          <div class="alert alert-danger" role="alert"><%= error %></div>
+          <% } %> <% if (success && success.length > 0) { %>
+          <div class="alert alert-success" role="alert"><%= success %></div>
+          <% } %>
+
+          <!-- Moments Grid -->
+          <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            <% if (moments && moments.length > 0) { %> <% moments.forEach(moment
+            => { %>
+            <div class="col">
+              <div class="card h-100 bg-dark border-0 shadow moment-card">
+                <div class="moment-media-container">
+                  <div
+                    class="privacy-badge <%= moment.privacy === 'public' ? 'bg-success' : (moment.privacy === 'friends' ? 'bg-info' : 'bg-warning') %>"
+                  >
+                    <i
+                      class="fas <%= moment.privacy === 'public' ? 'fa-globe' : (moment.privacy === 'friends' ? 'fa-user-friends' : 'fa-lock') %>"
+                    ></i>
+                    <%= moment.privacy.charAt(0).toUpperCase() +
+                    moment.privacy.slice(1) %>
+                  </div>
+                  <% if (moment.mediaType === 'image') { %>
+                  <img
+                    src="/uploads/moments/<%= moment.mediaUrl %>"
+                    class="card-img-top moment-media"
+                    alt="Moment"
+                  />
+                  <% } else { %>
+                  <video
+                    src="/uploads/moments/<%= moment.mediaUrl %>"
+                    class="card-img-top moment-media"
+                    controls
+                  ></video>
+                  <% } %>
+                </div>
+                <div class="card-body">
+                  <h6 class="card-title text-light mb-2">
+                    <% if (moment.caption && moment.caption.length > 50) { %>
+                    <%= moment.caption.substring(0, 50) %>... <% } else { %> <%=
+                    moment.caption || 'No caption' %> <% } %>
+                  </h6>
+
+                  <div class="mt-2 moment-details">
+                    <div class="d-flex justify-content-between mb-1">
+                      <div>
+                        <i class="far fa-clock text-purple-light me-1"></i>
+                        <small class="text-light"
+                          ><%= new Date(moment.createdAt).toLocaleDateString()
+                          %></small
+                        >
+                      </div>
+                      <div>
+                        <i class="far fa-heart text-purple-light me-1"></i>
+                        <small class="text-light"
+                          ><%= moment.likes || 0 %></small
+                        >
+                      </div>
+                    </div>
+
+                    <% if (moment.Artist) { %>
+                    <div class="mb-1">
+                      <i class="fas fa-music text-purple-light me-1"></i>
+                      <small class="text-light"
+                        ><%= moment.Artist.name %></small
+                      >
+                    </div>
+                    <% } %> <% if (moment.Event) { %>
+                    <div class="mb-1">
+                      <i class="fas fa-calendar-alt text-purple-light me-1"></i>
+                      <small class="text-light"><%= moment.Event.name %></small>
+                    </div>
+                    <% } %> <% if (moment.location) { %>
+                    <div>
+                      <i
+                        class="fas fa-map-marker-alt text-purple-light me-1"
+                      ></i>
+                      <small class="text-light"><%= moment.location %></small>
+                    </div>
+                    <% } %>
+                  </div>
+                </div>
+                <div
+                  class="card-footer bg-dark-purple border-top border-secondary"
+                >
+                  <div
+                    class="d-flex justify-content-between align-items-center"
+                  >
+                    <a
+                      href="/moments/<%= moment.id %>"
+                      class="btn btn-sm btn-outline-purple"
+                    >
+                      <i class="fas fa-eye me-1"></i> View Details
+                    </a>
+                    <form
+                      action="/moments/<%= moment.id %>/delete"
+                      method="POST"
+                      onsubmit="return confirm('Are you sure you want to delete this moment? This cannot be undone.');"
+                    >
+                      <button
+                        type="submit"
+                        class="btn btn-sm btn-outline-danger"
+                      >
+                        <i class="fas fa-trash me-1"></i> Delete
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% }); %> <% } else { %>
+            <div class="col-12">
+              <div class="alert alert-info text-center">
+                <i class="fas fa-info-circle me-2"></i>
+                You haven't shared any moments yet. Click the "Share New Moment"
+                button to get started!
+              </div>
+            </div>
+            <% } %>
+          </div>
+
+          <!-- Pagination -->
+          <% if (totalPages > 1) { %>
+          <nav aria-label="Moments pagination" class="mt-4">
+            <ul class="pagination justify-content-center">
+              <% if (currentPage > 1) { %>
+              <li class="page-item">
+                <a
+                  class="page-link bg-dark text-light border-secondary"
+                  href="/moments/user?page=<%= currentPage - 1 %>"
+                >
+                  <i class="fas fa-chevron-left"></i>
+                </a>
+              </li>
+              <% } %> <% for(let i = 1; i <= totalPages; i++) { %>
+              <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                <a
+                  class="page-link <%= i === currentPage ? 'bg-gradient-purple border-purple' : 'bg-dark text-light border-secondary' %>"
+                  href="/moments/user?page=<%= i %>"
+                >
+                  <%= i %>
+                </a>
+              </li>
+              <% } %> <% if (currentPage < totalPages) { %>
+              <li class="page-item">
+                <a
+                  class="page-link bg-dark text-light border-secondary"
+                  href="/moments/user?page=<%= currentPage + 1 %>"
+                >
+                  <i class="fas fa-chevron-right"></i>
+                </a>
+              </li>
+              <% } %>
+            </ul>
+          </nav>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .moment-card {
+    transition: transform 0.3s ease;
+  }
+
+  .moment-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .moment-media-container {
+    height: 200px;
+    overflow: hidden;
+    background-color: #000;
+    position: relative;
+  }
+
+  .moment-media {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .privacy-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: white;
+    z-index: 10;
+  }
+
+  .moment-details {
+    font-size: 0.85rem;
+  }
+
+  /* Custom colors */
+  .bg-dark-purple {
+    background-color: #1e1a2b;
+  }
+
+  .bg-gradient-purple {
+    background: linear-gradient(45deg, #6a3093, #a044ff);
+  }
+
+  .text-purple-light {
+    color: #b388ff;
+  }
+
+  .btn-outline-purple {
+    color: #b388ff;
+    border-color: #b388ff;
+  }
+
+  .btn-outline-purple:hover {
+    background-color: #b388ff;
+    color: #1e1a2b;
+  }
+
+  .btn-gradient-purple {
+    background: linear-gradient(45deg, #6a3093, #a044ff);
+    border: none;
+    color: white;
+  }
+
+  .btn-gradient-purple:hover {
+    background: linear-gradient(45deg, #7b52a7, #b366ff);
+    color: white;
+  }
+
+  .border-purple {
+    border-color: #9370db !important;
+  }
+</style>
+
+<%- include('../partials/footer.ejs') %>

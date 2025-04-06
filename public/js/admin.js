@@ -2,15 +2,25 @@ document.addEventListener("DOMContentLoaded", function () {
   console.log("Admin Panel Loaded");
 
   // ✅ Smooth Scrolling for Navigation Links
-  document.querySelectorAll("a.nav-link").forEach((anchor) => {
-    anchor.addEventListener("click", function (e) {
-      e.preventDefault();
-      const targetId = this.getAttribute("href").substring(1);
-      const targetSection = document.getElementById(targetId);
-      window.scrollTo({
-        top: targetSection.offsetTop - 50, // Adjust for navbar height
-        behavior: "smooth",
-      });
+  const navLinks = document.querySelectorAll(".navbar-nav .nav-link");
+
+  // Add click event listeners to each link
+  navLinks.forEach((link) => {
+    link.addEventListener("click", function (e) {
+      // Check if the element exists before trying to access its properties
+      const targetId = this.getAttribute("data-target");
+      const targetElement = targetId ? document.getElementById(targetId) : null;
+
+      // Only proceed if target element exists
+      if (targetElement) {
+        e.preventDefault();
+        // Scroll to element logic here
+        window.scrollTo({
+          top: targetElement.offsetTop,
+          behavior: "smooth",
+        });
+      }
+      // If no target specified, let the link navigate normally
     });
   });
 

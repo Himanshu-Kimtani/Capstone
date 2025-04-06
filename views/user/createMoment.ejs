@@ -1,0 +1,264 @@
+<%- include('../partials/header.ejs') %>
+
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-lg-8 mx-auto">
+      <div class="card bg-dark-purple border-0 shadow">
+        <div
+          class="card-header bg-gradient-purple d-flex justify-content-between align-items-center"
+        >
+          <h2 class="text-white mb-0">Share a Moment</h2>
+          <a href="/users/dashboard" class="btn btn-outline-light"
+            >Back to Dashboard</a
+          >
+        </div>
+        <div class="card-body">
+          <% if (error && error.length > 0) { %>
+          <div class="alert alert-danger" role="alert"><%= error %></div>
+          <% } %> <% if (success && success.length > 0) { %>
+          <div class="alert alert-success" role="alert"><%= success %></div>
+          <% } %>
+
+          <form
+            action="/moments/create"
+            method="POST"
+            enctype="multipart/form-data"
+          >
+            <div class="mb-4 text-center">
+              <div class="moment-preview-container">
+                <div
+                  id="preview"
+                  class="moment-preview d-flex justify-content-center align-items-center"
+                >
+                  <i class="fas fa-image fa-4x text-purple-light"></i>
+                  <p class="mt-2 text-light">
+                    Select an image or video to share
+                  </p>
+                </div>
+              </div>
+              <div class="mt-3 text-center">
+                <label
+                  for="media"
+                  class="btn btn-gradient-purple btn-lg px-4 py-3"
+                >
+                  <i class="fas fa-upload me-2"></i> Choose Media
+                </label>
+                <input
+                  type="file"
+                  id="media"
+                  name="media"
+                  accept="image/*,video/*"
+                  class="d-none"
+                  required
+                />
+                <p class="form-text text-muted mt-3">
+                  Max size: 10MB. Supported formats: jpg, jpeg, png, gif, mp4,
+                  mov
+                </p>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="caption" class="form-label text-light">Caption</label>
+              <textarea
+                id="caption"
+                name="caption"
+                class="form-control bg-dark text-light border-secondary"
+                rows="3"
+                placeholder="What's on your mind?"
+              ></textarea>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="artistId" class="form-label text-light"
+                  >Tag an Artist</label
+                >
+                <select
+                  id="artistId"
+                  name="artistId"
+                  class="form-select bg-dark text-light border-secondary"
+                >
+                  <option value="">-- Select Artist (Optional) --</option>
+                  <% artists.forEach(artist => { %>
+                  <option value="<%= artist.id %>"><%= artist.name %></option>
+                  <% }); %>
+                </select>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="eventId" class="form-label text-light"
+                  >Tag an Event</label
+                >
+                <select
+                  id="eventId"
+                  name="eventId"
+                  class="form-select bg-dark text-light border-secondary"
+                >
+                  <option value="">-- Select Event (Optional) --</option>
+                  <% events.forEach(event => { %>
+                  <option value="<%= event.id %>">
+                    <%= event.name %> - <%= new
+                    Date(event.date).toLocaleDateString() %>
+                  </option>
+                  <% }); %>
+                </select>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="venueId" class="form-label text-light"
+                  >Tag a Venue</label
+                >
+                <select
+                  id="venueId"
+                  name="venueId"
+                  class="form-select bg-dark text-light border-secondary"
+                >
+                  <option value="">-- Select Venue (Optional) --</option>
+                  <% venues.forEach(venue => { %>
+                  <option value="<%= venue.id %>">
+                    <%= venue.name %> - <%= venue.location %>
+                  </option>
+                  <% }); %>
+                </select>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="location" class="form-label text-light"
+                  >Location</label
+                >
+                <input
+                  type="text"
+                  id="location"
+                  name="location"
+                  class="form-control bg-dark text-light border-secondary"
+                  placeholder="Where was this taken? (Optional)"
+                />
+              </div>
+            </div>
+
+            <!-- Privacy options removed - all moments will be public -->
+            <p class="text-light mt-3 mb-4">
+              <i class="fas fa-globe me-1 text-purple-light"></i>
+              Your moment will be visible to everyone in the gallery.
+            </p>
+
+            <div class="d-grid gap-2 mt-4">
+              <button type="submit" class="btn btn-gradient-purple btn-lg">
+                <i class="fas fa-share-alt me-2"></i> Share Moment
+              </button>
+              <a href="/users/dashboard" class="btn btn-outline-secondary"
+                >Cancel</a
+              >
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .moment-preview-container {
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
+    border-radius: 12px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 3px dashed #9370db;
+    margin-bottom: 2rem;
+    transition: all 0.3s ease;
+  }
+
+  .moment-preview-container:hover {
+    border-color: #a044ff;
+    box-shadow: 0 0 15px rgba(160, 68, 255, 0.3);
+  }
+
+  .moment-preview {
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .preview-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 8px;
+  }
+
+  .preview-video {
+    max-width: 100%;
+    max-height: 350px;
+    border-radius: 8px;
+  }
+
+  /* Custom colors */
+  .bg-dark-purple {
+    background-color: #1e1a2b;
+  }
+
+  .bg-gradient-purple {
+    background: linear-gradient(45deg, #6a3093, #a044ff);
+  }
+
+  .text-purple-light {
+    color: #b388ff;
+  }
+
+  .btn-gradient-purple {
+    background: linear-gradient(45deg, #6a3093, #a044ff);
+    border: none;
+    color: white;
+  }
+
+  .btn-gradient-purple:hover {
+    background: linear-gradient(45deg, #7b52a7, #b366ff);
+    color: white;
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const mediaInput = document.getElementById("media");
+    const preview = document.getElementById("preview");
+
+    preview.addEventListener("click", function () {
+      mediaInput.click();
+    });
+
+    mediaInput.addEventListener("change", function () {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          preview.innerHTML = "";
+
+          if (file.type.startsWith("image/")) {
+            const img = document.createElement("img");
+            img.src = e.target.result;
+            img.className = "preview-img";
+            preview.appendChild(img);
+          } else if (file.type.startsWith("video/")) {
+            const video = document.createElement("video");
+            video.src = e.target.result;
+            video.className = "preview-video";
+            video.controls = true;
+            video.autoplay = false;
+            preview.appendChild(video);
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  });
+</script>
+
+<%- include('../partials/footer.ejs') %>

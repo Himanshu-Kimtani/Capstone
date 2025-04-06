@@ -1,0 +1,304 @@
+<%- include('../partials/header') %>
+
+<div class="container mt-4">
+  <div class="row mb-4">
+    <div class="col-md-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <h2 class="text-purple">Create New Event</h2>
+        <div>
+          <a href="/artist/events" class="btn btn-outline-light">
+            <i class="fas fa-arrow-left"></i> Back to Events
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Flash Messages -->
+  <% if (typeof messages !== 'undefined' && messages.error) { %>
+  <div class="alert alert-danger"><%= messages.error %></div>
+  <% } %> <% if (typeof messages !== 'undefined' && messages.success) { %>
+  <div class="alert alert-success"><%= messages.success %></div>
+  <% } %>
+
+  <div class="card bg-dark-purple border-0 shadow">
+    <div class="card-header border-bottom border-purple">
+      <h4 class="text-purple-light">Event Details</h4>
+    </div>
+    <div class="card-body">
+      <form
+        action="/artist/events/create"
+        method="POST"
+        enctype="multipart/form-data"
+      >
+        <!-- Event Name -->
+        <div class="mb-3">
+          <label for="name" class="form-label text-purple-light"
+            >Event Title <span class="text-danger">*</span></label
+          >
+          <input
+            type="text"
+            class="form-control bg-dark-input text-white border-purple"
+            id="name"
+            name="name"
+            required
+            placeholder="Enter event title"
+          />
+        </div>
+
+        <!-- Date and Time -->
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="date" class="form-label text-purple-light"
+              >Date <span class="text-danger">*</span></label
+            >
+            <input
+              type="date"
+              class="form-control bg-dark-input text-white border-purple"
+              id="date"
+              name="date"
+              required
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="time" class="form-label text-purple-light"
+              >Time <span class="text-danger">*</span></label
+            >
+            <input
+              type="time"
+              class="form-control bg-dark-input text-white border-purple"
+              id="time"
+              name="time"
+              required
+            />
+          </div>
+        </div>
+
+        <!-- Location -->
+        <div class="mb-3">
+          <label for="location" class="form-label text-purple-light"
+            >Venue / Location <span class="text-danger">*</span></label
+          >
+          <input
+            type="text"
+            class="form-control bg-dark-input text-white border-purple"
+            id="location"
+            name="location"
+            required
+            placeholder="Enter venue or location name"
+          />
+        </div>
+
+        <!-- Price -->
+        <div class="mb-3">
+          <label for="price" class="form-label text-purple-light"
+            >Ticket Price ($) <span class="text-danger">*</span></label
+          >
+          <input
+            type="number"
+            class="form-control bg-dark-input text-white border-purple"
+            id="price"
+            name="price"
+            required
+            min="0"
+            step="0.01"
+            placeholder="0.00"
+          />
+        </div>
+
+        <!-- Genre -->
+        <div class="mb-3">
+          <label for="genre" class="form-label text-purple-light">Genre</label>
+          <select
+            class="form-select bg-dark-input text-white border-purple"
+            id="genre"
+            name="genre"
+          >
+            <option value="">Select genre</option>
+            <option value="Rock">Rock</option>
+            <option value="Pop">Pop</option>
+            <option value="Hip-Hop">Hip-Hop</option>
+            <option value="R&B">R&B</option>
+            <option value="Jazz">Jazz</option>
+            <option value="Electronic">Electronic</option>
+            <option value="Classical">Classical</option>
+            <option value="Country">Country</option>
+            <option value="Metal">Metal</option>
+            <option value="Folk">Folk</option>
+            <option value="Blues">Blues</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <!-- Description -->
+        <div class="mb-3">
+          <label for="description" class="form-label text-purple-light"
+            >Description</label
+          >
+          <textarea
+            class="form-control bg-dark-input text-white border-purple"
+            id="description"
+            name="description"
+            rows="5"
+            placeholder="Tell us about your event..."
+          ></textarea>
+        </div>
+
+        <!-- Image Upload -->
+        <div class="mb-3">
+          <label for="picture" class="form-label text-purple-light"
+            >Event Image <span class="text-danger">*</span></label
+          >
+          <input
+            type="file"
+            class="form-control bg-dark-input text-white border-purple"
+            id="picture"
+            name="picture"
+            accept="image/*"
+            required
+          />
+          <small class="text-muted"
+            >Upload a poster or banner for your event (Max size: 5MB)</small
+          >
+        </div>
+
+        <!-- Submit Button -->
+        <div class="d-grid gap-2">
+          <button type="submit" class="btn btn-gradient-purple btn-lg">
+            Submit Event for Approval
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Info Card -->
+  <div class="card bg-gradient-blue text-white mt-4 border-0 shadow">
+    <div class="card-body">
+      <h5 class="card-title">
+        <i class="fas fa-info-circle me-2"></i> What happens next?
+      </h5>
+      <p class="card-text">
+        Your event will be submitted with a "pending" status and requires admin
+        approval before being displayed publicly on the platform. You can view
+        and manage all your pending events from your artist dashboard.
+      </p>
+      <ul>
+        <li>
+          You can edit or delete your pending events at any time before
+          approval.
+        </li>
+        <li>
+          Once approved, your event will be visible to all users on the
+          platform.
+        </li>
+        <li>
+          Approved events cannot be modified or deleted by artists - please
+          contact support for any changes.
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<style>
+  .bg-dark-purple {
+    background-color: #1e1a2b;
+  }
+
+  .bg-dark-input {
+    background-color: #12101a;
+  }
+
+  .bg-purple {
+    background-color: #7c4dff;
+  }
+
+  .text-purple {
+    color: #9775fa;
+  }
+
+  .text-purple-light {
+    color: #d0bfff;
+  }
+
+  .border-purple {
+    border-color: #7c4dff !important;
+  }
+
+  .bg-gradient-purple {
+    background: linear-gradient(45deg, #6200ea, #9d46ff);
+  }
+
+  .bg-gradient-blue {
+    background: linear-gradient(45deg, #2979ff, #00b0ff);
+  }
+
+  .btn-outline-purple {
+    color: #b388ff;
+    border-color: #6200ea;
+  }
+
+  .btn-outline-purple:hover {
+    background-color: #6200ea;
+    color: white;
+  }
+
+  .btn-gradient-purple {
+    background: linear-gradient(45deg, #6200ea, #9d46ff);
+    border: none;
+    color: white;
+    transition: all 0.3s ease;
+  }
+
+  .btn-gradient-purple:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(98, 0, 234, 0.3);
+  }
+
+  .card {
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: #272235;
+    border: 1px solid #7c4dff;
+  }
+
+  .shadow {
+    box-shadow: 0 4px 20px rgba(98, 0, 234, 0.15) !important;
+  }
+
+  /* Form control focus styling */
+  .form-control:focus,
+  .form-select:focus {
+    background-color: #272235;
+    color: #f8f9fa;
+    border-color: #7c4dff;
+    box-shadow: 0 0 0 0.25rem rgba(124, 77, 255, 0.25);
+  }
+
+  .form-control::placeholder {
+    color: #adb5bd;
+  }
+
+  label {
+    color: #d0bfff;
+  }
+
+  .info-card {
+    border-left: 4px solid #7c4dff;
+    background-color: #272235;
+  }
+
+  .btn-outline-light {
+    color: #ffffff;
+    border-color: #d0bfff;
+  }
+
+  .btn-outline-light:hover {
+    background-color: #d0bfff;
+    color: #1e1a2b;
+  }
+</style>
+
+<%- include('../partials/footer') %>

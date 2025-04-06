@@ -1,21 +1,63 @@
 <%- include('partials/header') %>
-<div class="container">
-  <h2 class="text-center text-purple">Artists</h2>
-  <div class="row">
-    <% artists.forEach(artist => { %>
-    <div class="col-md-4">
-      <div class="card bg-dark text-light my-2">
-        <img src="/images/artist-placeholder.jpg" class="card-img-top" />
-        <div class="card-body">
-          <h5 class="card-title"><%= artist.name %></h5>
-          <p>Genre: <%= artist.genre %></p>
-          <a href="/artists/<%= artist.id %>" class="btn btn-outline-primary"
-            >View Profile</a
-          >
-        </div>
+
+<div class="container mt-4">
+  <h2 class="text-center text-purple">Discover Artists</h2>
+
+  <!-- Search & Filter Bar -->
+  <form action="/artists" method="GET" class="my-4">
+    <div class="row g-3">
+      <div class="col-md-4">
+        <input type="text" class="form-control" name="q" placeholder="Search by artist name" value="<%= q || '' %>">
+      </div>
+      <div class="col-md-4">
+        <select class="form-select" name="genre">
+          <option value="">All Genres</option>
+          <option value="rock" <%= genre === "rock" ? "selected" : "" %>>Rock</option>
+          <option value="pop" <%= genre === "pop" ? "selected" : "" %>>Pop</option>
+          <option value="jazz" <%= genre === "jazz" ? "selected" : "" %>>Jazz</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-primary w-100">Search</button>
       </div>
     </div>
-    <% }) %>
+  </form>
+
+  <!-- Artist Listings -->
+  <div class="row">
+    <% if (artists.length === 0) { %>
+      <p class="text-center text-muted">No artists found!</p>
+    <% } else { %>
+      <% artists.forEach(artist => { %>
+        <div class="col-md-4">
+          <div class="card bg-dark text-light my-2">
+            <img src="<%= artist.imageUrl || '/images/artist-placeholder.jpg' %>" class="card-img-top" alt="Artist Image">
+            <div class="card-body">
+              <h5 class="card-title"><%= artist.name %></h5>
+              <p>Genre: <%= artist.genre || "N/A" %></p>
+              <a href="/artists/<%= artist.id %>" class="btn btn-outline-primary w-100">View Profile</a>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    <% } %>
   </div>
+
+  <!-- Pagination (if needed) -->
+  <% if (totalPages > 1) { %>
+    <nav aria-label="Page navigation">
+      <ul class="pagination justify-content-center mt-4">
+        <% for (let i = 1; i <= totalPages; i++) { %>
+          <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+            <a class="page-link" href="/artists?page=<%= i %>&q=<%= q || '' %>&genre=<%= genre || '' %>">
+              <%= i %>
+            </a>
+          </li>
+        <% } %>
+      </ul>
+    </nav>
+  <% } %>
+
 </div>
+
 <%- include('partials/footer') %>

@@ -1,33 +1,45 @@
 <!-- Admin Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="/admin">
-    <img src="/images/logo.png" alt="VYNYL Logo" class="navbar-logo" />
-  </a>
-  <button
-    class="navbar-toggler"
-    type="button"
-    data-toggle="collapse"
-    data-target="#adminNavbar"
-  >
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="adminNavbar">
-    <ul class="navbar-nav ml-auto">
-      <li class="nav-item">
-        <a class="nav-link" href="#dashboard">Dashboard</a>
-      </li>
-      <li class="nav-item"><a class="nav-link" href="#events">Events</a></li>
-      <li class="nav-item"><a class="nav-link" href="#users">Users</a></li>
-      <li class="nav-item"><a class="nav-link" href="#artists">Artists</a></li>
-      <li class="nav-item">
-        <a class="nav-link text-danger" href="/users/logout">Logout</a>
-      </li>
-    </ul>
+  <div class="container">
+    <a class="navbar-brand" href="/admin">Admin Dashboard</a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#adminNavbar"
+      aria-controls="adminNavbar"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="adminNavbar">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/admin">Dashboard</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/admin/event/create">Create Event</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/admin/artist/create">Create Artist</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/admin/gallery">Gallery</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/admin/support">Support</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav ms-auto d-flex align-items-center">
+        <li class="nav-item">
+          <a class="nav-link" href="/">View Site</a>
+        </li>
+        <li class="nav-item">
+          <!-- Simplified logout button that matches other nav links -->
+          <a class="nav-link" href="/admin/logout">Logout</a>
+        </li>
+      </ul>
+    </div>
   </div>
 </nav>
-<!-- Bootstrap -->
-<link
-  href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-  rel="stylesheet"
-/>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
