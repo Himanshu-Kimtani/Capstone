@@ -38,6 +38,10 @@ const User = sequelize.define(
       type: DataTypes.STRING,
       defaultValue: "",
     },
+    profilePicture: {
+      type: DataTypes.STRING,
+      defaultValue: "",
+    },
     backgroundImage: {
       type: DataTypes.STRING,
       defaultValue: "",

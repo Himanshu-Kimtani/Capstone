@@ -10,6 +10,7 @@ const { sequelize } = require("./models");
 const loggerMiddleware = require("./middleware/logger");
 const errorHandler = require("./middleware/errorHandler");
 const SequelizeStore = require("connect-session-sequelize")(session.Store);
+const cookieParser = require("cookie-parser");
 
 const app = express();
 const PORT = process.env.PORT || 7778;
@@ -26,11 +27,13 @@ const sessionStore = new SequelizeStore({
   db: sequelize,
 });
 
+app.use(cookieParser());
+
 app.use(
   session({
     secret: process.env.SESSION_SECRET || "vynyl_secret",
-    resave: true,
-    saveUninitialized: true,
+    resave: false,
+    saveUninitialized: false,
     cookie: {
       secure: process.env.NODE_ENV === "production",
       httpOnly: true,

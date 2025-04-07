@@ -11,11 +11,18 @@ const { Booking } = require("../models");
 const { Event } = require("../models");
 const { ArtistFollow } = require("../models");
 const { Artist } = require("../models");
+const fs = require("fs");
 
 // Configure multer for profile picture uploads
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "public/uploads/profiles/");
+    // Create directory if it doesn't exist
+    const dir = path.join(__dirname, "../public/uploads/profile");
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+      console.log(`Created directory: ${dir}`);
+    }
+    cb(null, dir);
   },
   filename: function (req, file, cb) {
     cb(null, `user-${Date.now()}${path.extname(file.originalname)}`);
@@ -24,7 +31,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 2 * 1024 * 1024 }, // 2MB limit
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
   fileFilter: function (req, file, cb) {
     const filetypes = /jpeg|jpg|png|gif/;
     const extname = filetypes.test(
@@ -117,7 +124,7 @@ router.post("/signup", async (req, res) => {
         }
 
         req.flash("success", "Account created successfully!");
-        return res.redirect("/client/user/profile");
+        return res.redirect("/users/dashboard");
       });
     } catch (dbError) {
       console.error("Database error during signup:", dbError);
@@ -247,17 +254,14 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// ✅ Get User Profile (Protected Route)
-router.get("/profile", (req, res) => {
+router.get("/profile", async (req, res) => {
   // Check if user is in session
   if (!req.session.user) {
     return res.redirect("/users/login");
   }
 
-  // Render the profile page
-  res.render("profile", {
-    user: req.session.user,
-  });
+  // Redirect to dashboard instead of rendering profile
+  return res.redirect("/users/dashboard");
 });
 
 // New Dashboard Route

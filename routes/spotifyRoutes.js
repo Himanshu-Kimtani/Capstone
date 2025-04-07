@@ -9,6 +9,9 @@ const spotifyApi = new SpotifyWebApi({
   redirectUri: process.env.SPOTIFY_REDIRECT_URI,
 });
 
+// Log the configured redirect URI on startup
+console.log("Spotify Redirect URI:", process.env.SPOTIFY_REDIRECT_URI);
+
 // Middleware to check if user is logged in
 const isLoggedIn = (req, res, next) => {
   if (req.session.user) {
@@ -21,12 +24,25 @@ const isLoggedIn = (req, res, next) => {
 
 // Check connection status
 router.get("/status", isLoggedIn, (req, res) => {
+  console.log("Session in status check:", {
+    hasAccessToken: !!req.session.spotifyAccessToken,
+    hasRefreshToken: !!req.session.spotifyRefreshToken,
+    userId: req.session.user ? req.session.user.id : null,
+  });
+
   const connected = !!req.session.spotifyAccessToken;
   console.log(
     "Spotify status check:",
     connected ? "Connected" : "Not connected"
   );
-  res.json({ connected });
+
+  // Force the session to save any changes
+  req.session.save((err) => {
+    if (err) {
+      console.error("Error saving session:", err);
+    }
+    res.json({ connected });
+  });
 });
 
 // Initiate Spotify connection
@@ -36,29 +52,66 @@ router.get("/connect", isLoggedIn, (req, res) => {
     "user-read-email",
     "user-read-playback-state",
     "user-modify-playback-state",
+    "playlist-read-private",
+    "playlist-read-collaborative",
   ];
-  const authorizeURL = spotifyApi.createAuthorizeURL(scopes);
-  res.json({ url: authorizeURL });
+
+  // Generate and log the complete authorize URL for debugging
+  const authorizeURL = spotifyApi.createAuthorizeURL(
+    scopes,
+    req.session.user.id
+  );
+  console.log("Spotify Authorization URL:", authorizeURL);
+
+  // Redirect directly to Spotify authorization page instead of returning JSON
+  res.redirect(authorizeURL);
 });
 
 // Handle Spotify callback
 router.get("/callback", async (req, res) => {
   try {
+    console.log("Spotify callback received with query params:", req.query);
     const { code } = req.query;
+
+    if (!code) {
+      const error = req.query.error || "No authorization code received";
+      console.error("Spotify callback error:", error);
+      req.flash("error", `Spotify connection failed: ${error}`);
+      return res.redirect("/users/dashboard");
+    }
+
+    console.log("Exchanging authorization code for tokens...");
     const data = await spotifyApi.authorizationCodeGrant(code);
 
     // Save tokens in session
     req.session.spotifyAccessToken = data.body["access_token"];
     req.session.spotifyRefreshToken = data.body["refresh_token"];
+    console.log("Spotify tokens received and saved to session:", {
+      hasAccessToken: !!req.session.spotifyAccessToken,
+      accessTokenLength: req.session.spotifyAccessToken
+        ? req.session.spotifyAccessToken.length
+        : 0,
+      hasRefreshToken: !!req.session.spotifyRefreshToken,
+    });
 
     // Set tokens on API object
     spotifyApi.setAccessToken(data.body["access_token"]);
     spotifyApi.setRefreshToken(data.body["refresh_token"]);
 
-    res.redirect("/users/dashboard");
+    // Make sure the session is saved before redirecting
+    req.session.save((err) => {
+      if (err) {
+        console.error("Error saving session after Spotify auth:", err);
+        req.flash("error", "Failed to save Spotify connection to your session");
+      } else {
+        console.log("Session successfully saved with Spotify tokens");
+        req.flash("success", "Successfully connected to Spotify!");
+      }
+      res.redirect("/users/dashboard");
+    });
   } catch (error) {
-    console.error("Spotify callback error:", error);
-    req.flash("error", "Failed to connect to Spotify");
+    console.error("Spotify callback error details:", error);
+    req.flash("error", "Failed to connect to Spotify: " + error.message);
     res.redirect("/users/dashboard");
   }
 });
@@ -186,69 +239,109 @@ router.post("/playback/:action", isLoggedIn, async (req, res) => {
 // Get user playlists
 router.get("/playlists", isLoggedIn, async (req, res) => {
   try {
+    console.log("Spotify playlists request received");
+
     if (!req.session.spotifyAccessToken) {
-      return res.status(401).json({ error: "Not connected to Spotify" });
+      console.log("No Spotify access token found for playlists request");
+      return res
+        .status(401)
+        .json({ error: "Not connected to Spotify", playlists: [] });
     }
 
     // Set access token
     spotifyApi.setAccessToken(req.session.spotifyAccessToken);
+    console.log("Requesting playlists from Spotify API...");
 
-    // Get playlists
-    const response = await spotifyApi.getUserPlaylists({ limit: 50 });
+    try {
+      // Get playlists
+      const response = await spotifyApi.getUserPlaylists({ limit: 50 });
 
-    if (!response.body || !response.body.items) {
-      return res.json({ playlists: [] });
-    }
+      console.log("Playlists response received:", {
+        hasBody: !!response.body,
+        itemsCount:
+          response.body && response.body.items ? response.body.items.length : 0,
+      });
 
-    const playlists = response.body.items.map((playlist) => ({
-      id: playlist.id,
-      name: playlist.name,
-      description: playlist.description || "",
-      imageUrl:
-        playlist.images && playlist.images.length > 0
-          ? playlist.images[0].url
-          : null,
-      trackCount: playlist.tracks ? playlist.tracks.total : 0,
-    }));
-
-    res.json({ playlists });
-  } catch (error) {
-    console.error("Playlist error:", error.message);
-
-    // Try token refresh if unauthorized
-    if (error.statusCode === 401) {
-      try {
-        spotifyApi.setRefreshToken(req.session.spotifyRefreshToken);
-        const refreshData = await spotifyApi.refreshAccessToken();
-        req.session.spotifyAccessToken = refreshData.body.access_token;
-
-        // Retry with new token
-        spotifyApi.setAccessToken(req.session.spotifyAccessToken);
-        const response = await spotifyApi.getUserPlaylists({ limit: 50 });
-
-        if (!response.body || !response.body.items) {
-          return res.json({ playlists: [] });
-        }
-
-        const playlists = response.body.items.map((playlist) => ({
-          id: playlist.id,
-          name: playlist.name,
-          description: playlist.description || "",
-          imageUrl:
-            playlist.images && playlist.images.length > 0
-              ? playlist.images[0].url
-              : null,
-          trackCount: playlist.tracks ? playlist.tracks.total : 0,
-        }));
-
-        res.json({ playlists });
-        return;
-      } catch (refreshError) {
-        console.error("Token refresh failed:", refreshError);
+      if (!response.body || !response.body.items) {
+        console.log("No playlists found in response");
+        return res.json({ playlists: [] });
       }
-    }
 
-    res.status(500).json({ error: "Failed to get playlists" });
+      const playlists = response.body.items.map((playlist) => ({
+        id: playlist.id,
+        name: playlist.name,
+        description: playlist.description || "",
+        imageUrl:
+          playlist.images && playlist.images.length > 0
+            ? playlist.images[0].url
+            : null,
+        trackCount: playlist.tracks ? playlist.tracks.total : 0,
+      }));
+
+      console.log(`Returning ${playlists.length} playlists`);
+      res.json({ playlists });
+    } catch (apiError) {
+      console.error("Spotify API error:", apiError);
+
+      // Check if token expired
+      if (apiError.statusCode === 401) {
+        console.log("Token expired, attempting refresh for playlists request");
+
+        try {
+          spotifyApi.setRefreshToken(req.session.spotifyRefreshToken);
+          const refreshData = await spotifyApi.refreshAccessToken();
+          req.session.spotifyAccessToken = refreshData.body.access_token;
+          console.log("Access token refreshed successfully");
+
+          // Retry with new token
+          spotifyApi.setAccessToken(req.session.spotifyAccessToken);
+          const response = await spotifyApi.getUserPlaylists({ limit: 50 });
+
+          if (!response.body || !response.body.items) {
+            console.log("No playlists found after token refresh");
+            return res.json({ playlists: [] });
+          }
+
+          const playlists = response.body.items.map((playlist) => ({
+            id: playlist.id,
+            name: playlist.name,
+            description: playlist.description || "",
+            imageUrl:
+              playlist.images && playlist.images.length > 0
+                ? playlist.images[0].url
+                : null,
+            trackCount: playlist.tracks ? playlist.tracks.total : 0,
+          }));
+
+          console.log(
+            `Returning ${playlists.length} playlists after token refresh`
+          );
+          res.json({ playlists });
+          return;
+        } catch (refreshError) {
+          console.error("Token refresh failed for playlists:", refreshError);
+          return res.status(401).json({
+            error: "Session expired. Please reconnect to Spotify.",
+            errorDetail: refreshError.message,
+            playlists: [],
+          });
+        }
+      }
+
+      // For other errors
+      return res.status(apiError.statusCode || 500).json({
+        error: "Failed to get playlists",
+        errorDetail: apiError.message,
+        playlists: [],
+      });
+    }
+  } catch (error) {
+    console.error("Unexpected error in playlists route:", error);
+    res.status(500).json({
+      error: "Server error while getting playlists",
+      errorDetail: error.message,
+      playlists: [],
+    });
   }
 });
 

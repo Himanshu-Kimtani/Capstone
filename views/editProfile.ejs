@@ -78,10 +78,14 @@
                     name="profilePicture"
                     accept="image/*"
                   />
-                  <% if (user.profilePicture) { %>
+                  <small class="text-muted"
+                    >Max size: 10MB. Supported formats: jpg, jpeg, png,
+                    gif</small
+                  >
+                  <% if (user.profilePicture || user.profilePhoto) { %>
                   <div class="mt-2">
                     <img
-                      src="/uploads/profiles/<%= user.profilePicture %>"
+                      src="/uploads/profile/<%= user.profilePhoto || user.profilePicture %>"
                       alt="Current Profile Picture"
                       class="img-thumbnail"
                       style="max-width: 100px"
@@ -140,7 +144,9 @@
                   <button type="submit" class="btn btn-primary">
                     Save Changes
                   </button>
-                  <a href="/users/profile" class="btn btn-secondary">Cancel</a>
+                  <a href="/users/dashboard" class="btn btn-secondary"
+                    >Cancel</a
+                  >
                 </div>
               </form>
             </div>

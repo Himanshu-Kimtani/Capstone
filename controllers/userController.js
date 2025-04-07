@@ -178,7 +178,7 @@ exports.getEditProfile = async (req, res) => {
 
     if (!user) {
       req.flash("error", "User not found");
-      return res.redirect("/users/profile");
+      return res.redirect("/users/dashboard");
     }
 
     res.render("editProfile", {
@@ -188,7 +188,7 @@ exports.getEditProfile = async (req, res) => {
   } catch (error) {
     console.error("Error loading edit profile page:", error);
     req.flash("error", "Error loading edit profile page");
-    res.redirect("/users/profile");
+    res.redirect("/users/dashboard");
   }
 };
 
@@ -201,7 +201,7 @@ exports.updateProfile = async (req, res) => {
     const user = await User.findByPk(userId);
     if (!user) {
       req.flash("error", "User not found");
-      return res.redirect("/users/profile");
+      return res.redirect("/users/dashboard");
     }
 
     // Update fields
@@ -232,6 +232,10 @@ exports.updateProfile = async (req, res) => {
 
     // Update profile picture if uploaded
     if (req.file) {
+      console.log("Profile picture uploaded:", req.file);
+      updateFields.profilePhoto = req.file.filename;
+
+      // Also update profilePicture for backward compatibility
       updateFields.profilePicture = req.file.filename;
     }
 
@@ -243,10 +247,10 @@ exports.updateProfile = async (req, res) => {
 
     console.log(`User profile updated: ${user.id} - ${user.email}`);
     req.flash("success", "Profile updated successfully");
-    res.redirect("/users/profile");
+    res.redirect("/users/dashboard");
   } catch (error) {
     console.error("Error updating profile:", error);
-    req.flash("error", "Error updating profile");
+    req.flash("error", "Error updating profile: " + error.message);
     res.redirect("/users/edit-profile");
   }
 };

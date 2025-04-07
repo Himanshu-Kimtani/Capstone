@@ -3,151 +3,44 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Concert Gallery | Vynyl</title>
+    <title>Feed | Vynyl</title>
     <link rel="stylesheet" href="/css/styles.css" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
-    <!-- Add Masonry layout library -->
-    <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"></script>
-    <!-- Font Awesome for icons -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
     <style>
-      .gallery-grid {
-        margin: 0 -5px;
-      }
-      .gallery-item {
-        padding: 5px;
-        cursor: pointer;
-        transition: all 0.2s ease;
-      }
-      .gallery-item:hover {
-        transform: scale(1.02);
-        z-index: 1;
-      }
-      .gallery-img {
-        width: 100%;
-        border-radius: 8px;
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-      }
-      .modal-fullscreen .modal-content {
-        background-color: rgba(0, 0, 0, 0.9);
-        color: white;
-      }
-      .modal-image {
-        max-height: 70vh;
-        object-fit: contain;
-      }
-      .comment-section {
-        max-height: 300px;
-        overflow-y: auto;
-      }
-      .like-button {
-        cursor: pointer;
-      }
-      .like-button.liked {
-        color: #ff4081;
-      }
-      .upload-btn {
-        position: fixed;
-        bottom: 30px;
-        right: 30px;
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        background: #a267ff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 30px;
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-        z-index: 100;
-      }
-      .category-pills {
-        margin-bottom: 20px;
-        overflow-x: auto;
-        white-space: nowrap;
-        padding-bottom: 5px;
-      }
-      .category-pill {
-        cursor: pointer;
-        border: none;
-        border-radius: 20px;
-        background: #333;
-        color: white;
-        padding: 8px 16px;
-        margin-right: 10px;
-        display: inline-block;
-      }
-      .category-pill.active {
-        background: #a267ff;
-      }
-      .highlight-post {
-        animation: highlightPulse 2s ease-in-out;
-        box-shadow: 0 0 25px rgba(255, 91, 172, 0.9);
-        z-index: 3;
-        transform: scale(1.05);
-        position: relative;
-      }
-      .highlight-post::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        border: 3px solid #ff5bac;
-        border-radius: 8px;
-        z-index: 4;
-        pointer-events: none;
-      }
-      @keyframes highlightPulse {
-        0%,
-        100% {
-          box-shadow: 0 0 20px rgba(255, 91, 172, 0.8);
-        }
-        50% {
-          box-shadow: 0 0 30px rgba(255, 91, 172, 1);
-        }
-      }
       .moment-card {
         transition: transform 0.3s ease;
       }
-
       .moment-card:hover {
         transform: translateY(-5px);
       }
-
       .moment-media-container {
         height: 200px;
         overflow: hidden;
         background-color: #000;
       }
-
       .moment-media {
         width: 100%;
         height: 100%;
         object-fit: cover;
       }
-
       .user-avatar {
         width: 40px;
         height: 40px;
         border-radius: 50%;
         overflow: hidden;
       }
-
       .user-avatar img {
         width: 100%;
         height: 100%;
         object-fit: cover;
       }
-
       .avatar-placeholder {
         width: 100%;
         height: 100%;
@@ -158,47 +51,37 @@
         justify-content: center;
         font-weight: bold;
       }
-
-      .moment-details {
-        font-size: 0.85rem;
+      .feed-header {
+        padding: 15px 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
       }
-
-      /* Custom colors */
-      .bg-dark-purple {
-        background-color: #1e1a2b;
-      }
-
-      .bg-gradient-purple {
-        background: linear-gradient(45deg, #6a3093, #a044ff);
-      }
-
-      .text-purple-light {
-        color: #b388ff;
-      }
-
-      .btn-outline-purple {
-        color: #b388ff;
-        border-color: #b388ff;
-      }
-
-      .btn-outline-purple:hover {
-        background-color: #b388ff;
-        color: #1e1a2b;
-      }
-
-      .btn-gradient-purple {
-        background: linear-gradient(45deg, #6a3093, #a044ff);
+      .share-button {
+        background-color: white;
+        color: #007bff;
         border: none;
-        color: white;
+        border-radius: 30px;
+        padding: 8px 20px;
+        font-weight: 600;
+        transition: all 0.3s ease;
       }
-
-      .btn-gradient-purple:hover {
-        background: linear-gradient(45deg, #7b52a7, #b366ff);
-        color: white;
+      .share-button:hover {
+        background-color: #f0f0f0;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       }
-
-      .border-purple {
-        border-color: #9370db !important;
+      .like-button {
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      .like-button.liked {
+        color: #ff4081;
+      }
+      .like-button:hover {
+        transform: scale(1.2);
       }
     </style>
   </head>
@@ -208,81 +91,39 @@
     <div class="container-fluid mt-4">
       <div class="row">
         <div class="col-lg-10 mx-auto">
-          <!-- Header with search and filter options -->
-          <div class="card mb-4 bg-dark-purple border-0 shadow">
-            <div
-              class="card-header bg-gradient-purple d-flex justify-content-between align-items-center"
-            >
-              <h2 class="text-white mb-0">Moments Gallery</h2>
-              <% if (user) { %>
-              <a href="/moments/new" class="btn btn-purple me-2">
-                <i class="fas fa-plus-circle me-2"></i> Share a Moment
-              </a>
-              <% } else { %>
-              <a href="/users/login" class="btn btn-light">
-                <i class="fas fa-sign-in-alt me-2"></i> Login to Share
-              </a>
-              <% } %>
-            </div>
-            <div class="card-body">
-              <% if (error && error.length > 0) { %>
-              <div class="alert alert-danger" role="alert"><%= error %></div>
-              <% } %> <% if (success && success.length > 0) { %>
-              <div class="alert alert-success" role="alert"><%= success %></div>
-              <% } %>
-
-              <form action="/moments/gallery" method="GET" class="row g-3">
-                <div class="col-md-4">
-                  <div class="input-group">
-                    <span
-                      class="input-group-text bg-dark text-light border-secondary"
-                    >
-                      <i class="fas fa-search"></i>
-                    </span>
-                    <input
-                      type="text"
-                      name="search"
-                      class="form-control bg-dark text-light border-secondary"
-                      placeholder="Search by caption or location"
-                      value="<%= search || '' %>"
-                    />
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <select
-                    name="artist"
-                    class="form-select bg-dark text-light border-secondary"
-                  >
-                    <option value="">All Artists</option>
-                    <!-- Artist options would be here -->
-                  </select>
-                </div>
-                <div class="col-md-3">
-                  <select
-                    name="venue"
-                    class="form-select bg-dark text-light border-secondary"
-                  >
-                    <option value="">All Venues</option>
-                    <!-- Venue options would be here -->
-                  </select>
-                </div>
-                <div class="col-md-2">
-                  <button type="submit" class="btn btn-gradient-purple w-100">
-                    <i class="fas fa-filter me-2"></i> Filter
-                  </button>
-                </div>
-              </form>
-            </div>
+          <!-- Header with title and share button -->
+          <div class="feed-header">
+            <h2 class="text-white mb-0">Moments Feed</h2>
+            <% if (user) { %>
+            <a href="/moments/new" class="share-button">
+              <i class="fas fa-plus-circle me-2"></i> Share a Moment
+            </a>
+            <% } else { %>
+            <a href="/users/login" class="share-button">
+              <i class="fas fa-sign-in-alt me-2"></i> Login to Share
+            </a>
+            <% } %>
           </div>
+
+          <!-- Alerts for error and success messages -->
+          <% if (error && error.length > 0) { %>
+          <div class="alert alert-danger mb-4" role="alert"><%= error %></div>
+          <% } %> <% if (success && success.length > 0) { %>
+          <div class="alert alert-success mb-4" role="alert">
+            <%= success %>
+          </div>
+          <% } %>
 
           <!-- Moments Grid -->
           <div
             class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4"
           >
-            <% if (moments && moments.length > 0) { %> <% moments.forEach(moment
-            => { %>
+            <% if (moments && moments.length > 0) { %> <%
+            moments.forEach(function(moment) { %>
             <div class="col">
-              <div class="card h-100 bg-dark border-0 shadow moment-card">
+              <div
+                class="card h-100 bg-dark text-white border-0 shadow moment-card"
+              >
                 <div class="moment-media-container">
                   <% if (moment.mediaType === 'image') { %>
                   <a href="/moments/<%= moment.id %>">
@@ -298,11 +139,7 @@
                       src="/uploads/moments/<%= moment.mediaUrl %>"
                       class="card-img-top moment-media"
                       controls
-                    >
-                      <div class="video-play-icon">
-                        <i class="fas fa-play-circle"></i>
-                      </div>
-                    </video>
+                    ></video>
                   </a>
                   <% } %>
                 </div>
@@ -321,56 +158,42 @@
                       <% } %>
                     </div>
                     <div>
-                      <h6 class="card-title mb-0 text-light">
+                      <h6 class="card-title mb-0">
                         <%= moment.User ? moment.User.name : 'User' %>
                       </h6>
                       <small class="text-muted"><%= moment.timeAgo %></small>
                     </div>
                   </div>
-
-                  <p class="card-text text-light"><%= moment.caption %></p>
-
-                  <% if (moment.Artist || moment.Event || moment.location) { %>
-                  <div class="mt-2 moment-details">
-                    <% if (moment.Artist) { %>
-                    <div class="mb-1">
-                      <i class="fas fa-music text-purple-light"></i>
-                      <small class="text-light"
-                        ><%= moment.Artist.name %></small
-                      >
-                    </div>
-                    <% } %> <% if (moment.Event) { %>
-                    <div class="mb-1">
-                      <i class="fas fa-calendar-alt text-purple-light"></i>
-                      <small class="text-light"><%= moment.Event.name %></small>
-                    </div>
-                    <% } %> <% if (moment.location) { %>
-                    <div>
-                      <i class="fas fa-map-marker-alt text-purple-light"></i>
-                      <small class="text-light"><%= moment.location %></small>
-                    </div>
-                    <% } %>
-                  </div>
-                  <% } %>
+                  <p class="card-text"><%= moment.caption %></p>
                 </div>
-                <div
-                  class="card-footer bg-dark-purple border-top border-secondary"
-                >
+                <div class="card-footer bg-dark border-top border-secondary">
                   <div
                     class="d-flex justify-content-between align-items-center"
                   >
                     <div>
-                      <span class="text-purple-light">
-                        <i class="far fa-heart"></i> <%= moment.likes || 0 %>
+                      <% // Check if user has liked this moment let hasLiked =
+                      false; if (user && moment.MomentLikes) { hasLiked =
+                      moment.MomentLikes.some(like => like.userId === user.id);
+                      } %> <% if (user) { %>
+                      <span
+                        class="like-action"
+                        data-moment-id="<%= moment.id %>"
+                      >
+                        <i
+                          class="like-button <%= hasLiked ? 'liked' : '' %> fa<%= hasLiked ? 's' : 'r' %> fa-heart"
+                        ></i>
+                        <span class="like-count"><%= moment.likes || 0 %></span>
                       </span>
-                      <span class="ms-3 text-purple-light">
-                        <i class="far fa-comment"></i> <%= moment.comments || 0
-                        %>
-                      </span>
+                      <% } else { %>
+                      <span class="text-light"
+                        ><i class="far fa-heart"></i> <%= moment.likes || 0
+                        %></span
+                      >
+                      <% } %>
                     </div>
                     <a
                       href="/moments/<%= moment.id %>"
-                      class="btn btn-sm btn-outline-purple"
+                      class="btn btn-sm btn-outline-light"
                     >
                       <i class="fas fa-eye me-1"></i> View
                     </a>
@@ -389,14 +212,14 @@
           </div>
 
           <!-- Pagination -->
-          <% if (totalPages > 1) { %>
+          <% if (typeof totalPages !== 'undefined' && totalPages > 1) { %>
           <nav aria-label="Moments pagination" class="mt-4">
             <ul class="pagination justify-content-center">
               <% if (currentPage > 1) { %>
               <li class="page-item">
                 <a
                   class="page-link bg-dark text-light border-secondary"
-                  href="/moments/gallery?page=<%= currentPage - 1 %><%= search ? `&search=${search}` : '' %><%= artistId ? `&artist=${artistId}` : '' %><%= venueId ? `&venue=${venueId}` : '' %>"
+                  href="/moments/gallery?page=<%= currentPage - 1 %>"
                 >
                   <i class="fas fa-chevron-left"></i>
                 </a>
@@ -404,8 +227,8 @@
               <% } %> <% for(let i = 1; i <= totalPages; i++) { %>
               <li class="page-item <%= i === currentPage ? 'active' : '' %>">
                 <a
-                  class="page-link <%= i === currentPage ? 'bg-gradient-purple border-purple' : 'bg-dark text-light border-secondary' %>"
-                  href="/moments/gallery?page=<%= i %><%= search ? `&search=${search}` : '' %><%= artistId ? `&artist=${artistId}` : '' %><%= venueId ? `&venue=${venueId}` : '' %>"
+                  class="page-link <%= i === currentPage ? 'bg-primary' : 'bg-dark text-light' %> border-secondary"
+                  href="/moments/gallery?page=<%= i %>"
                 >
                   <%= i %>
                 </a>
@@ -414,7 +237,7 @@
               <li class="page-item">
                 <a
                   class="page-link bg-dark text-light border-secondary"
-                  href="/moments/gallery?page=<%= currentPage + 1 %><%= search ? `&search=${search}` : '' %><%= artistId ? `&artist=${artistId}` : '' %><%= venueId ? `&venue=${venueId}` : '' %>"
+                  href="/moments/gallery?page=<%= currentPage + 1 %>"
                 >
                   <i class="fas fa-chevron-right"></i>
                 </a>
@@ -427,432 +250,51 @@
       </div>
     </div>
 
-    <!-- Image Upload Modal -->
-    <% if (user) { %>
-    <div class="modal fade" id="uploadModal" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Share a Moment</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <form
-              action="/gallery/upload"
-              method="POST"
-              enctype="multipart/form-data"
-            >
-              <div class="mb-3">
-                <label for="image" class="form-label">Choose Photo</label>
-                <input
-                  type="file"
-                  class="form-control"
-                  id="image"
-                  name="image"
-                  required
-                  accept="image/*"
-                />
-                <div id="image-preview" class="mt-2"></div>
-              </div>
-              <div class="mb-3">
-                <label for="caption" class="form-label">Caption</label>
-                <textarea
-                  class="form-control"
-                  id="caption"
-                  name="caption"
-                  rows="2"
-                  placeholder="Write a caption..."
-                ></textarea>
-              </div>
-              <div class="row">
-                <div class="col-md-6 mb-3">
-                  <label for="artistId" class="form-label">Tag Artist</label>
-                  <select class="form-select" id="artistId" name="artistId">
-                    <option value="">Select Artist (Optional)</option>
-                    <% artists.forEach(artist => { %>
-                    <option value="<%= artist.id %>"><%= artist.name %></option>
-                    <% }) %>
-                  </select>
-                </div>
-                <div class="col-md-6 mb-3">
-                  <label for="venueName" class="form-label">Tag Venue</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="venueName"
-                    name="venueName"
-                    placeholder="Venue name (optional)"
-                  />
-                </div>
-              </div>
-              <div class="mb-3">
-                <label for="category" class="form-label">Category</label>
-                <select class="form-select" id="category" name="category">
-                  <option value="Concert">Concert</option>
-                  <option value="Artist">Artist</option>
-                  <option value="Venue">Venue</option>
-                  <option value="Other">Other</option>
-                </select>
-              </div>
-              <div class="text-end">
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  data-bs-dismiss="modal"
-                >
-                  Cancel
-                </button>
-                <button type="submit" class="btn btn-primary">Share</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-    <% } %>
-
-    <!-- Image View Modal -->
-    <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-xl modal-fullscreen">
-        <div class="modal-content">
-          <div class="modal-header border-0">
-            <button
-              type="button"
-              class="btn-close btn-close-white"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <div class="container">
-              <div class="row">
-                <div class="col-md-8 text-center mb-3">
-                  <img src="" id="modal-image" class="modal-image img-fluid" />
-                </div>
-                <div class="col-md-4">
-                  <div class="mb-3">
-                    <h5 id="modal-caption"></h5>
-                    <div class="text-muted mb-2">
-                      Shared by <span id="modal-username"></span>
-                      <span class="ms-2 small" id="modal-date"></span>
-                    </div>
-                    <div id="modal-tags">
-                      <span class="badge bg-primary d-none" id="artist-tag">
-                        <i class="fas fa-music me-1"></i>
-                        <span id="artist-name"></span>
-                      </span>
-                      <span class="badge bg-success d-none" id="venue-tag">
-                        <i class="fas fa-map-marker-alt me-1"></i>
-                        <span id="venue-name"></span>
-                      </span>
-                    </div>
-                  </div>
-
-                  <div class="d-flex align-items-center mb-3">
-                    <div class="me-3">
-                      <i class="fas fa-heart like-button" id="like-button"></i>
-                      <span id="likes-count">0</span> likes
-                    </div>
-                    <div>
-                      <i class="fas fa-comment me-1"></i>
-                      <span id="comments-count">0</span> comments
-                    </div>
-                    <% if (user && user.role === 'admin') { %>
-                    <div class="ms-auto">
-                      <button class="btn btn-sm btn-danger" id="delete-image">
-                        <i class="fas fa-trash-alt"></i> Delete
-                      </button>
-                    </div>
-                    <% } %>
-                  </div>
-
-                  <hr />
-
-                  <div id="comments-container" class="comment-section mb-3">
-                    <!-- Comments will be loaded here -->
-                  </div>
-
-                  <% if (user) { %>
-                  <div class="comment-form">
-                    <form id="comment-form">
-                      <div class="input-group">
-                        <input
-                          type="text"
-                          class="form-control"
-                          id="comment-input"
-                          placeholder="Add a comment..."
-                          required
-                        />
-                        <button class="btn btn-primary" type="submit">
-                          Post
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-                  <% } else { %>
-                  <p class="text-muted">
-                    <a href="/users/login">Log in</a> to like or comment on
-                    images.
-                  </p>
-                  <% } %>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <%- include('./partials/footer.ejs') %>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        // Initialize Masonry layout
-        const grid = document.querySelector(".gallery-grid");
-        const masonry = new Masonry(grid, {
-          itemSelector: ".gallery-item",
-          percentPosition: true,
-        });
+        // Handle like button clicks
+        const likeActions = document.querySelectorAll(".like-action");
 
-        // Handle category filtering
-        const categoryPills = document.querySelectorAll(".category-pill");
-        categoryPills.forEach((pill) => {
-          pill.addEventListener("click", function () {
-            // Update active state
-            categoryPills.forEach((p) => p.classList.remove("active"));
-            this.classList.add("active");
+        likeActions.forEach((action) => {
+          action.addEventListener("click", function (e) {
+            const momentId = this.dataset.momentId;
+            const likeButton = this.querySelector(".like-button");
+            const likeCountElement = this.querySelector(".like-count");
 
-            const category = this.dataset.category;
-            const items = document.querySelectorAll(".gallery-item");
+            fetch(`/moments/${momentId}/like`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.success) {
+                  // Update UI
+                  if (data.liked) {
+                    likeButton.classList.add("liked");
+                    likeButton.classList.replace("far", "fas");
+                  } else {
+                    likeButton.classList.remove("liked");
+                    likeButton.classList.replace("fas", "far");
+                  }
 
-            items.forEach((item) => {
-              if (category === "all" || item.dataset.category === category) {
-                item.style.display = "block";
-              } else {
-                item.style.display = "none";
-              }
-            });
-
-            // Re-layout Masonry
-            setTimeout(() => masonry.layout(), 100);
-          });
-        });
-
-        // Image preview for upload
-        const imageInput = document.getElementById("image");
-        const imagePreview = document.getElementById("image-preview");
-
-        if (imageInput) {
-          imageInput.addEventListener("change", function () {
-            const file = this.files[0];
-            if (file) {
-              const reader = new FileReader();
-              reader.onload = function (e) {
-                imagePreview.innerHTML = `<img src="${e.target.result}" class="img-fluid rounded" style="max-height: 200px;">`;
-              };
-              reader.readAsDataURL(file);
-            }
-          });
-        }
-
-        // Setup modal image view
-        const galleryItems = document.querySelectorAll(".gallery-item");
-        const imageModal = new bootstrap.Modal(
-          document.getElementById("imageModal")
-        );
-
-        galleryItems.forEach((item) => {
-          item.addEventListener("click", function () {
-            const data = this.querySelector(".image-data").dataset;
-
-            // Set modal content
-            document.getElementById("modal-image").src = data.url;
-            document.getElementById("modal-caption").textContent =
-              data.caption || "";
-            document.getElementById("modal-username").textContent =
-              data.username;
-            document.getElementById("likes-count").textContent = data.likes;
-            document.getElementById("comments-count").textContent =
-              data.comments;
-
-            // Handle artist tag
-            const artistTag = document.getElementById("artist-tag");
-            const artistName = document.getElementById("artist-name");
-            if (data.artist) {
-              artistTag.classList.remove("d-none");
-              artistName.textContent = data.artist;
-              artistTag.href = `/artists/${data.artistId}`;
-            } else {
-              artistTag.classList.add("d-none");
-            }
-
-            // Handle venue tag
-            const venueTag = document.getElementById("venue-tag");
-            const venueName = document.getElementById("venue-name");
-            if (data.venue) {
-              venueTag.classList.remove("d-none");
-              venueName.textContent = data.venue;
-            } else {
-              venueTag.classList.add("d-none");
-            }
-
-            // Handle like button state
-            const likeButton = document.getElementById("like-button");
-            likeButton.classList.toggle("liked", data.userLiked === "true");
-
-            // Load comments
-            loadComments(data.id);
-
-            // Set up Like button action
-            likeButton.onclick = function () {
-              toggleLike(data.id);
-            };
-
-            // Set up comment form
-            const commentForm = document.getElementById("comment-form");
-            if (commentForm) {
-              commentForm.onsubmit = function (e) {
-                e.preventDefault();
-                const comment = document.getElementById("comment-input").value;
-                if (comment.trim()) {
-                  addComment(data.id, comment);
+                  // Update count
+                  let likeCount = parseInt(likeCountElement.textContent);
+                  likeCount = data.liked
+                    ? likeCount + 1
+                    : Math.max(0, likeCount - 1);
+                  likeCountElement.textContent = likeCount;
                 }
-              };
-            }
-
-            // Set up delete button for admins
-            const deleteButton = document.getElementById("delete-image");
-            if (deleteButton) {
-              deleteButton.onclick = function () {
-                if (confirm("Are you sure you want to delete this image?")) {
-                  window.location.href = `/gallery/${data.id}/delete`;
-                }
-              };
-            }
-
-            // Show modal
-            imageModal.show();
+              })
+              .catch((error) => {
+                console.error("Error toggling like:", error);
+              });
           });
         });
-
-        // Function to load comments
-        function loadComments(imageId) {
-          const commentsContainer =
-            document.getElementById("comments-container");
-          commentsContainer.innerHTML =
-            '<div class="text-center"><div class="spinner-border spinner-border-sm" role="status"></div> Loading comments...</div>';
-
-          fetch(`/gallery/${imageId}/comments`)
-            .then((response) => response.json())
-            .then((data) => {
-              if (data.comments.length === 0) {
-                commentsContainer.innerHTML =
-                  '<p class="text-muted text-center">No comments yet. Be the first to comment!</p>';
-                return;
-              }
-
-              let html = "";
-              data.comments.forEach((comment) => {
-                html += `
-                <div class="comment mb-2">
-                  <div><strong>${comment.user.name}</strong></div>
-                  <div>${comment.comment}</div>
-                  <div class="text-muted small">${new Date(
-                    comment.createdAt
-                  ).toLocaleString()}</div>
-                </div>
-                <hr>
-              `;
-              });
-
-              commentsContainer.innerHTML = html;
-            })
-            .catch((error) => {
-              console.error("Error loading comments:", error);
-              commentsContainer.innerHTML =
-                '<p class="text-danger">Error loading comments. Please try again.</p>';
-            });
-        }
-
-        // Function to toggle like
-        function toggleLike(imageId) {
-          fetch(`/gallery/${imageId}/like`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              if (data.success) {
-                const likeButton = document.getElementById("like-button");
-                const likesCount = document.getElementById("likes-count");
-
-                likeButton.classList.toggle("liked", data.liked);
-                likesCount.textContent = data.likesCount;
-              }
-            })
-            .catch((error) => {
-              console.error("Error toggling like:", error);
-            });
-        }
-
-        // Function to add comment
-        function addComment(imageId, comment) {
-          fetch(`/gallery/${imageId}/comment`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ comment }),
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              if (data.success) {
-                document.getElementById("comment-input").value = "";
-                document.getElementById("comments-count").textContent =
-                  data.commentsCount;
-                loadComments(imageId); // Reload comments
-              }
-            })
-            .catch((error) => {
-              console.error("Error adding comment:", error);
-            });
-        }
-
-        // Check if there's a highlight parameter in the URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const highlightId = urlParams.get("highlight");
-
-        if (highlightId) {
-          // Find the post with matching ID
-          const postToHighlight = document.querySelector(
-            `.gallery-item[data-id="${highlightId}"]`
-          );
-
-          if (postToHighlight) {
-            // Add highlight class
-            postToHighlight.classList.add("highlight-post");
-
-            // Scroll to the highlighted post
-            setTimeout(() => {
-              postToHighlight.scrollIntoView({
-                behavior: "smooth",
-                block: "center",
-              });
-
-              // NEW: Automatically open the modal after a short delay
-              setTimeout(() => {
-                postToHighlight.click(); // This will trigger the modal to open
-              }, 800);
-            }, 300);
-          }
-        }
       });
     </script>
   </body>

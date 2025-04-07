@@ -9,6 +9,7 @@ const MomentLike = db.MomentLike;
 const fs = require("fs");
 const path = require("path");
 const { Op } = require("sequelize");
+const sequelize = db.sequelize;
 
 // Create a new moment
 exports.createMoment = async (req, res) => {
@@ -160,6 +161,7 @@ exports.getAllMoments = async (req, res) => {
           { model: User, attributes: ["id", "name", "profilePhoto"] },
           { model: Artist, attributes: ["id", "name", "genre"] },
           { model: Event, attributes: ["id", "name", "date"] },
+          { model: MomentLike }, // Include likes to check if user has liked
         ],
         order: [["createdAt", "DESC"]],
         limit,
@@ -349,11 +351,13 @@ exports.likeMoment = async (req, res) => {
       // Unlike
       await existingLike.destroy();
 
-      // Update like count
-      await Moment.update(
-        { likes: sequelize.literal("likes - 1") },
-        { where: { id: momentId } }
-      );
+      // Update like count, ensuring it doesn't go below 0
+      if (moment.likes > 0) {
+        await Moment.update(
+          { likes: sequelize.literal("GREATEST(likes - 1, 0)") },
+          { where: { id: momentId } }
+        );
+      }
 
       return res.json({ success: true, liked: false });
     } else {

@@ -47,7 +47,7 @@ exports.bookEvent = async (req, res) => {
       "success",
       `Successfully booked ${tickets} ticket(s) for ${event.name}.`
     );
-    res.redirect("/users/profile");
+    res.redirect("/users/dashboard");
   } catch (error) {
     console.error("Error booking event:", error);
     req.flash("error", "Internal Server Error.");
@@ -113,7 +113,7 @@ exports.cancelBooking = async (req, res) => {
 
     await booking.destroy();
     req.flash("success", "Booking canceled successfully.");
-    res.redirect("/users/profile");
+    res.redirect("/users/dashboard");
   } catch (error) {
     console.error("Error canceling booking:", error);
     req.flash("error", "Internal Server Error.");

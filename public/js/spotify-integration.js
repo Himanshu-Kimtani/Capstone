@@ -120,16 +120,9 @@ function updateUIBasedOnConnection() {
 }
 
 function connectToSpotify() {
-  fetch("/spotify/connect")
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.url) {
-        window.location.href = data.url;
-      }
-    })
-    .catch((error) => {
-      console.error("Error connecting to Spotify:", error);
-    });
+  // The connect button now directly navigates to /spotify/connect
+  // which will handle the redirect on the server side
+  window.location.href = "/spotify/connect";
 }
 
 function updateCurrentTrack() {
@@ -289,10 +282,21 @@ function startTrackUpdates() {
 function loadPlaylists() {
   if (!playlistsDropdown) return;
 
+  console.log("Attempting to load Spotify playlists...");
+
   fetch("/spotify/playlists")
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json();
+    })
     .then((data) => {
+      console.log("Playlists received:", data);
+
       if (data.playlists && data.playlists.length > 0) {
+        console.log(`Found ${data.playlists.length} playlists`);
+
         // Clear dropdown
         playlistsDropdown.innerHTML =
           '<option value="">Select a playlist</option>';
@@ -309,10 +313,18 @@ function loadPlaylists() {
         if (playlistContainer) {
           playlistContainer.style.display = "block";
         }
+      } else {
+        console.log("No playlists found or empty playlists array");
+        playlistsDropdown.innerHTML =
+          '<option value="">No playlists found</option>';
       }
     })
     .catch((error) => {
       console.error("Error loading playlists:", error);
+      if (playlistsDropdown) {
+        playlistsDropdown.innerHTML =
+          '<option value="">Error loading playlists</option>';
+      }
     });
 }
 
