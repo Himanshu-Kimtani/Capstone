@@ -9,7 +9,7 @@ router.get("/", async (req, res) => {
     const events = await Event.findAll({
       where: { status: "approved" },
       include: [{ model: Artist, attributes: ["id", "name"] }],
-      order: [["date", "ASC"]],
+      order: [["createdAt", "DESC"]],
       limit: 3,
     });
 

@@ -32,6 +32,11 @@ const Artist = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    followers: {
+      type: DataTypes.JSON,
+      defaultValue: [],
+      allowNull: true,
+    },
   },
   { timestamps: true }
 );

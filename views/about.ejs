@@ -1,10 +1,332 @@
 <%- include('partials/header') %>
-<div class="container">
-  <h2 class="text-center text-purple">About VYNIL</h2>
-  <p>
-    VYNYL is a platform that brings you the best concerts and music events
-    happening near you. Our mission is to connect music lovers with
-    unforgettable experiences.
-  </p>
-</div>
+
+<style>
+  .about-hero {
+    background: linear-gradient(135deg, #0f1c2e 0%, #1a1b3c 100%);
+    padding: 100px 0 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .about-hero::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("/images/hero-pattern.png") repeat;
+    opacity: 0.1;
+  }
+
+  .about-hero h1 {
+    color: #fff;
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    position: relative;
+  }
+
+  .about-hero p {
+    color: #a78bfa;
+    font-size: 1.2rem;
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .about-section {
+    padding: 80px 0;
+    background: #0f172a;
+  }
+
+  .about-card {
+    background: rgba(30, 41, 59, 0.5);
+    border-radius: 16px;
+    padding: 40px;
+    margin-bottom: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: transform 0.3s ease;
+  }
+
+  .about-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .about-card h3 {
+    color: #fff;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+  }
+
+  .about-card h3 i {
+    color: #8b5cf6;
+    margin-right: 15px;
+    font-size: 24px;
+  }
+
+  .about-card p {
+    color: #94a3b8;
+    line-height: 1.7;
+    margin-bottom: 0;
+  }
+
+  .stats-section {
+    background: linear-gradient(135deg, #2d1b69 0%, #1e1b4b 100%);
+    padding: 60px 0;
+  }
+
+  .stat-card {
+    text-align: center;
+    padding: 30px;
+  }
+
+  .stat-number {
+    color: #8b5cf6;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .stat-label {
+    color: #fff;
+    font-size: 1.1rem;
+  }
+
+  .team-section {
+    background: #0f172a;
+    padding: 80px 0;
+  }
+
+  .team-card {
+    background: rgba(30, 41, 59, 0.5);
+    border-radius: 16px;
+    padding: 40px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 30px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .team-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #4f46e5, #8b5cf6);
+  }
+
+  .team-initial {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #4f46e5, #8b5cf6);
+    color: white;
+    font-size: 2rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+  }
+
+  .team-name {
+    color: #fff;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+
+  .team-role {
+    color: #8b5cf6;
+    font-size: 1rem;
+    margin-bottom: 20px;
+    font-weight: 500;
+  }
+
+  .team-description {
+    color: #94a3b8;
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+
+  .team-social {
+    margin-top: 20px;
+  }
+
+  .team-social a {
+    color: #94a3b8;
+    margin: 0 12px;
+    font-size: 1.4rem;
+    transition: all 0.3s ease;
+  }
+
+  .team-social a:hover {
+    color: #8b5cf6;
+    transform: translateY(-2px);
+  }
+
+  .section-title {
+    color: #fff;
+    text-align: center;
+    margin-bottom: 50px;
+  }
+
+  .section-title h2 {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+  }
+
+  .section-title p {
+    color: #94a3b8;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+</style>
+
+<!-- Hero Section -->
+<section class="about-hero">
+  <div class="container">
+    <h1>About VYNYL</h1>
+    <p>
+      Revolutionizing the way music lovers discover and experience live events
+    </p>
+  </div>
+</section>
+
+<!-- Our Story Section -->
+<section class="about-section">
+  <div class="container">
+    <div class="section-title">
+      <h2>Our Story</h2>
+      <p>Building the future of live music experiences</p>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="about-card">
+          <h3><i class="fas fa-music"></i>Our Mission</h3>
+          <p>
+            To create unforgettable musical experiences by connecting artists
+            with their fans through seamless event discovery and booking.
+          </p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="about-card">
+          <h3><i class="fas fa-heart"></i>Our Vision</h3>
+          <p>
+            To become the world's most trusted platform for live music events,
+            making incredible performances accessible to everyone.
+          </p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="about-card">
+          <h3><i class="fas fa-star"></i>Our Values</h3>
+          <p>
+            We believe in transparency, innovation, and putting our community
+            first. Every decision we make is guided by our passion for music.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="stat-card">
+          <div class="stat-number">100K+</div>
+          <div class="stat-label">Happy Customers</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stat-card">
+          <div class="stat-number">1000+</div>
+          <div class="stat-label">Events Hosted</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stat-card">
+          <div class="stat-number">500+</div>
+          <div class="stat-label">Artist Partners</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stat-card">
+          <div class="stat-number">50+</div>
+          <div class="stat-label">Cities Covered</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Team Section -->
+<section class="team-section">
+  <div class="container">
+    <div class="section-title">
+      <h2>Meet Our Team</h2>
+      <p>The passionate individuals behind VYNYL</p>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="team-card">
+          <div class="team-initial">HK</div>
+          <h4 class="team-name">Himanshu Kimtani</h4>
+          <div class="team-role">Founder & Lead Developer</div>
+          <p class="team-description">
+            Passionate about creating innovative solutions in the music
+            industry. Dedicated to building a platform that brings artists and
+            fans together through unforgettable live experiences.
+          </p>
+          <div class="team-social">
+            <a
+              href="https://www.linkedin.com/in/himanshu-kimtani-181667306/"
+              target="_blank"
+              title="LinkedIn"
+              ><i class="fab fa-linkedin"></i
+            ></a>
+            <a
+              href="https://github.com/Himanshu-Kimtani"
+              target="_blank"
+              title="GitHub"
+              ><i class="fab fa-github"></i
+            ></a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="team-card">
+          <div class="team-initial">BM</div>
+          <h4 class="team-name">Brandon Montoya</h4>
+          <div class="team-role">Co-founder & Frontend Developer</div>
+          <p class="team-description">
+            Creative frontend developer with a keen eye for design and user
+            experience. Focused on crafting beautiful and intuitive interfaces
+            that make discovering music events a joy.
+          </p>
+          <div class="team-social">
+            <a href="#" target="_blank" title="LinkedIn"
+              ><i class="fab fa-linkedin"></i
+            ></a>
+            <a href="#" target="_blank" title="GitHub"
+              ><i class="fab fa-github"></i
+            ></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <%- include('partials/footer') %>

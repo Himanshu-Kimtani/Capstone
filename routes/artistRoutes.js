@@ -4,6 +4,8 @@ const { Artist, Event, User } = require("../models");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+const artistController = require("../controllers/artistController");
+const { isAuthenticated } = require("../middleware/authMiddleware");
 
 // Get the multer upload instance from the express app
 const getMulter = (req) => {
@@ -669,5 +671,10 @@ router.post("/profile/picture", isArtist, async (req, res) => {
     res.redirect("/artist/profile/edit");
   }
 });
+
+// Artist Discovery and Profile
+router.get("/discover", isAuthenticated, artistController.getDiscoverArtists);
+router.get("/:id/profile", artistController.getArtistProfile);
+router.post("/:id/follow", isAuthenticated, artistController.toggleFollow);
 
 module.exports = router;

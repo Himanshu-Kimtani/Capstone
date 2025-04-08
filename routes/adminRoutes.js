@@ -126,6 +126,7 @@ router.get("/", isAdmin, async (req, res) => {
 });
 
 // User Management
+router.get("/users", isAdmin, adminController.getUsers);
 router.post("/user/:id/delete", isAdmin, adminController.deleteUser);
 router.get("/user/:id/edit", isAdmin, adminController.getUserEditForm);
 router.post("/user/:id/edit", isAdmin, adminController.updateUser);
@@ -150,6 +151,7 @@ router.post(
 router.post("/event/:id/delete", isAdmin, adminController.deleteEvent);
 
 // Artist Management
+router.get("/artists", isAdmin, adminController.getArtists);
 router.get("/artist/create", isAdmin, adminController.getCreateArtistForm);
 router.post(
   "/artist/create",
@@ -166,10 +168,6 @@ router.post(
   adminController.updateArtist
 );
 router.post("/artist/:id/delete", isAdmin, adminController.deleteArtist);
-
-// Gallery Management
-router.get("/gallery", isAdmin, adminController.getGallery);
-router.post("/gallery/:id/delete", isAdmin, adminController.deleteGalleryImage);
 
 // Support Management
 router.get("/support", isAdmin, adminController.getSupport);

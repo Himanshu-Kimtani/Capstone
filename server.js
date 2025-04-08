@@ -244,4 +244,9 @@ if (require.main === module) {
   });
 }
 
+// Serve static files
+app.use(express.static("public"));
+app.use("/uploads", express.static("public/uploads"));
+app.use("/images", express.static("public/images"));
+
 module.exports = app;

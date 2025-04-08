@@ -1,5 +1,6 @@
-const { User, Booking, Event, Artist } = require("../models");
+const { User, Booking, Event, Artist, ArtistFollow } = require("../models");
 const bcrypt = require("bcrypt");
+const { Op } = require("sequelize");
 
 // Hardcoded Admin Credentials
 const ADMIN_EMAIL = "admin@vynyl.com";
@@ -367,5 +368,57 @@ exports.getEventTicket = async (req, res) => {
     console.error("Error getting event ticket:", error);
     req.flash("error", "Error retrieving ticket");
     res.redirect("/users/tickets");
+  }
+};
+
+exports.getDashboard = async (req, res) => {
+  try {
+    const userId = req.session.user.id;
+
+    // Get user with followed artists
+    const user = await User.findByPk(userId, {
+      include: [
+        {
+          model: Artist,
+          as: "followedArtists",
+          through: ArtistFollow,
+          include: [
+            {
+              model: Event,
+              as: "events",
+              where: {
+                date: {
+                  [Op.gte]: new Date(),
+                },
+              },
+              required: false,
+            },
+          ],
+        },
+      ],
+    });
+
+    if (!user) {
+      req.flash("error", "User not found");
+      return res.redirect("/login");
+    }
+
+    // Get upcoming events from followed artists
+    const upcomingEvents = user.followedArtists
+      .map((artist) => artist.events)
+      .flat()
+      .sort((a, b) => new Date(a.date) - new Date(b.date))
+      .slice(0, 5); // Get 5 most recent events
+
+    res.render("user/dashboard", {
+      title: "Dashboard",
+      user: user,
+      followedArtists: user.followedArtists,
+      upcomingEvents: upcomingEvents,
+    });
+  } catch (error) {
+    console.error("Error getting dashboard:", error);
+    req.flash("error", "Failed to load dashboard");
+    res.redirect("/");
   }
 };

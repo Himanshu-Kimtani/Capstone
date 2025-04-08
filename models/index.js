@@ -14,6 +14,7 @@ const Venue = require("./Venue");
 const Moment = require("./Moment");
 const MomentComment = require("./MomentComment");
 const MomentLike = require("./MomentLike");
+const ArtistFollow = require("./ArtistFollow");
 
 // Add all models to the db object
 const db = {
@@ -31,6 +32,7 @@ const db = {
   Moment,
   MomentComment,
   MomentLike,
+  ArtistFollow,
 };
 
 // Set up associations for all models
@@ -52,5 +54,18 @@ ClientUser.belongsTo(User, {
 
 // Venue.hasMany(FeedPost, { foreignKey: 'venueId' });
 // FeedPost.belongsTo(Venue, { foreignKey: 'venueId' });
+
+// Add Artist Follow relationships
+User.belongsToMany(Artist, {
+  through: ArtistFollow,
+  foreignKey: "userId",
+  as: "followedArtistsList",
+});
+
+Artist.belongsToMany(User, {
+  through: ArtistFollow,
+  foreignKey: "artistId",
+  as: "followersList",
+});
 
 module.exports = db;

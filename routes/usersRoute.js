@@ -488,6 +488,64 @@ router.get("/check-session", (req, res) => {
   });
 });
 
+// Update user bio
+router.post("/update-bio", async (req, res) => {
+  try {
+    const { bio } = req.body;
+
+    // Check if user is logged in
+    if (!req.session || !req.session.user || !req.session.user.id) {
+      return res.status(401).json({
+        success: false,
+        message: "Please log in to update your bio",
+      });
+    }
+
+    const userId = req.session.user.id;
+    console.log("Updating bio for user:", userId);
+    console.log("New bio:", bio);
+
+    // Update User table
+    const [userUpdateCount] = await User.update(
+      { bio: bio },
+      { where: { id: userId } }
+    );
+
+    // Update ClientUser table
+    const [clientUpdateCount] = await ClientUser.update(
+      { bio: bio },
+      { where: { userId: userId } }
+    );
+
+    console.log(
+      "Update results - User:",
+      userUpdateCount,
+      "Client:",
+      clientUpdateCount
+    );
+
+    if (userUpdateCount > 0 || clientUpdateCount > 0) {
+      // At least one update was successful
+      res.json({
+        success: true,
+        message: "Bio updated successfully",
+      });
+    } else {
+      // No records were updated
+      res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+  } catch (error) {
+    console.error("Error updating bio:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to update bio",
+    });
+  }
+});
+
 // Export middleware for use in other routes
 exports.isAuthenticated = (req, res, next) => {
   if (req.session.user) {

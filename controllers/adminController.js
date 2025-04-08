@@ -718,15 +718,47 @@ exports.updateUser = async (req, res) => {
   }
 };
 
-// Artist management
+// User list management
+exports.getUsers = async (req, res) => {
+  try {
+    const users = await User.findAll({
+      order: [["createdAt", "DESC"]],
+      attributes: { exclude: ["password"] },
+    });
+
+    res.render("admin/users", {
+      title: "Users Management",
+      users,
+      user: req.session.user,
+    });
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    req.flash("error", "Failed to load users list");
+    res.redirect("/admin");
+  }
+};
+
+// Artist list management
 exports.getArtists = async (req, res) => {
   try {
     const artists = await Artist.findAll({
-      include: [{ model: Event }],
+      include: [
+        {
+          model: Event,
+          attributes: ["id"],
+        },
+      ],
+      order: [["createdAt", "DESC"]],
     });
-    res.render("admin/artists", { artists });
+
+    res.render("admin/artists", {
+      title: "Artists Management",
+      artists,
+      user: req.session.user,
+    });
   } catch (error) {
-    req.flash("error", "Error loading artists");
-    res.redirect("/admin/dashboard");
+    console.error("Error fetching artists:", error);
+    req.flash("error", "Failed to load artists list");
+    res.redirect("/admin");
   }
 };

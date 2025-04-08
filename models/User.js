@@ -50,6 +50,11 @@ const User = sequelize.define(
       type: DataTypes.JSONB,
       defaultValue: [],
     },
+    following: {
+      type: DataTypes.JSON,
+      defaultValue: [],
+      allowNull: true,
+    },
   },
   { timestamps: true }
 );

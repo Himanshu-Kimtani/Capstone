@@ -9,6 +9,107 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <style>
+      body {
+        background: linear-gradient(135deg, #0f1c2e 0%, #1a1b3c 100%);
+        min-height: 100vh;
+        color: #6b7280;
+      }
+      .card {
+        background: #ffffff;
+        border-radius: 12px;
+        border: none;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      }
+      .card-header {
+        background: #ffffff;
+        border-bottom: 1px solid #e5e7eb;
+        border-radius: 12px 12px 0 0 !important;
+        padding: 1.5rem;
+      }
+      .card-header h3 {
+        color: #4f46e5;
+        font-size: 1.5rem;
+        font-weight: 600;
+      }
+      .card-body {
+        padding: 1.5rem;
+      }
+      .form-label {
+        color: #6b7280;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+      }
+      .form-control {
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        background: #f9fafb;
+        color: #374151;
+      }
+      .form-control:focus {
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+      }
+      .form-control:disabled,
+      .form-control[readonly] {
+        background-color: #f3f4f6;
+      }
+      .btn-primary {
+        background: #4f46e5;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 500;
+      }
+      .btn-primary:hover {
+        background: #4338ca;
+      }
+      .btn-outline-secondary {
+        border: 1px solid #e5e7eb;
+        color: #6b7280;
+      }
+      .btn-outline-secondary:hover {
+        background: #f3f4f6;
+        color: #374151;
+        border-color: #d1d5db;
+      }
+      .text-muted {
+        color: #9ca3af !important;
+      }
+      hr {
+        border-color: #e5e7eb;
+        margin: 1.5rem 0;
+      }
+      .form-text {
+        color: #9ca3af;
+        font-size: 0.875rem;
+      }
+      .profile-picture {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #e5e7eb;
+      }
+      .choose-file-btn {
+        background: #f3f4f6;
+        border: 1px solid #e5e7eb;
+        color: #374151;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+      .choose-file-btn:hover {
+        background: #e5e7eb;
+      }
+    </style>
   </head>
   <body>
     <%- include('partials/header') %>
@@ -16,24 +117,27 @@
     <div class="container mt-5">
       <!-- Flash Messages -->
       <% if (success && success.length > 0) { %>
-      <div class="alert alert-success">
+      <div class="alert bg-dark-surface text-success border-0 shadow-sm">
+        <i class="fas fa-check-circle"></i>
         <% success.forEach(function(message) { %>
-        <p><%= message %></p>
+        <p class="mb-0"><%= message %></p>
         <% }); %>
       </div>
       <% } %> <% if (error && error.length > 0) { %>
-      <div class="alert alert-danger">
+      <div class="alert bg-dark-surface text-danger border-0 shadow-sm">
+        <i class="fas fa-exclamation-circle"></i>
         <% error.forEach(function(message) { %>
-        <p><%= message %></p>
+        <p class="mb-0"><%= message %></p>
         <% }); %>
       </div>
       <% } %>
 
       <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-8 col-lg-6">
           <div class="card">
-            <div class="card-header">
+            <div class="card-header text-center">
               <h3>Edit Profile</h3>
+              <p class="text-muted mb-0">Update your personal information</p>
             </div>
             <div class="card-body">
               <form
@@ -41,8 +145,11 @@
                 method="POST"
                 enctype="multipart/form-data"
               >
-                <div class="mb-3">
-                  <label for="name" class="form-label">Full Name</label>
+                <div class="mb-4">
+                  <label class="form-label d-flex align-items-center">
+                    <i class="fas fa-user me-2 text-muted"></i>
+                    Full Name
+                  </label>
                   <input
                     type="text"
                     class="form-control"
@@ -53,8 +160,11 @@
                   />
                 </div>
 
-                <div class="mb-3">
-                  <label for="email" class="form-label">Email</label>
+                <div class="mb-4">
+                  <label class="form-label d-flex align-items-center">
+                    <i class="fas fa-envelope me-2 text-muted"></i>
+                    Email
+                  </label>
                   <input
                     type="email"
                     class="form-control"
@@ -62,91 +172,99 @@
                     value="<%= user.email %>"
                     readonly
                   />
-                  <small class="text-muted"
-                    >Email cannot be changed for security reasons.</small
-                  >
+                  <div class="form-text">
+                    <i class="fas fa-info-circle me-1"></i>
+                    Email cannot be changed for security reasons
+                  </div>
                 </div>
 
-                <div class="mb-3">
-                  <label for="profilePicture" class="form-label"
-                    >Profile Picture</label
-                  >
-                  <input
-                    type="file"
-                    class="form-control"
-                    id="profilePicture"
-                    name="profilePicture"
-                    accept="image/*"
-                  />
-                  <small class="text-muted"
-                    >Max size: 10MB. Supported formats: jpg, jpeg, png,
-                    gif</small
-                  >
+                <div class="mb-4">
+                  <label class="form-label d-flex align-items-center">
+                    <i class="fas fa-camera me-2 text-muted"></i>
+                    Profile Picture
+                  </label>
+                  <div class="choose-file-btn d-flex align-items-center">
+                    <input
+                      type="file"
+                      class="form-control"
+                      id="profilePicture"
+                      name="profilePicture"
+                      accept="image/*"
+                      style="display: none"
+                    />
+                    <span>Choose File</span>
+                    <span class="ms-2 text-muted">No file chosen</span>
+                  </div>
+                  <div class="form-text">
+                    <i class="fas fa-info-circle me-1"></i>
+                    Max size: 10MB. Supported formats: jpg, jpeg, png, gif
+                  </div>
                   <% if (user.profilePicture || user.profilePhoto) { %>
-                  <div class="mt-2">
+                  <div class="text-center mt-3">
                     <img
                       src="/uploads/profile/<%= user.profilePhoto || user.profilePicture %>"
                       alt="Current Profile Picture"
-                      class="img-thumbnail"
-                      style="max-width: 100px"
+                      class="profile-picture"
                     />
-                    <small class="d-block text-muted"
-                      >Current profile picture</small
-                    >
                   </div>
                   <% } %>
                 </div>
 
-                <hr class="my-4" />
-                <h5>Change Password (Optional)</h5>
+                <hr />
 
-                <div class="mb-3">
-                  <label for="currentPassword" class="form-label"
-                    >Current Password</label
-                  >
-                  <input
-                    type="password"
-                    class="form-control"
-                    id="currentPassword"
-                    name="currentPassword"
-                  />
-                  <small class="text-muted"
-                    >Leave blank if you don't want to change your
-                    password</small
-                  >
+                <div class="mb-4">
+                  <h5 class="mb-3">Change Password</h5>
+                  <div class="mb-3">
+                    <label class="form-label d-flex align-items-center">
+                      <i class="fas fa-lock me-2 text-muted"></i>
+                      Current Password
+                    </label>
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="currentPassword"
+                      name="currentPassword"
+                    />
+                  </div>
+                  <div class="form-text mb-3">
+                    <i class="fas fa-info-circle me-1"></i>
+                    Leave blank if you don't want to change your password
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label d-flex align-items-center">
+                      <i class="fas fa-key me-2 text-muted"></i>
+                      New Password
+                    </label>
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="newPassword"
+                      name="newPassword"
+                    />
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label d-flex align-items-center">
+                      <i class="fas fa-check-circle me-2 text-muted"></i>
+                      Confirm New Password
+                    </label>
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="confirmPassword"
+                      name="confirmPassword"
+                    />
+                  </div>
                 </div>
 
-                <div class="mb-3">
-                  <label for="newPassword" class="form-label"
-                    >New Password</label
-                  >
-                  <input
-                    type="password"
-                    class="form-control"
-                    id="newPassword"
-                    name="newPassword"
-                  />
-                </div>
-
-                <div class="mb-3">
-                  <label for="confirmPassword" class="form-label"
-                    >Confirm New Password</label
-                  >
-                  <input
-                    type="password"
-                    class="form-control"
-                    id="confirmPassword"
-                    name="confirmPassword"
-                  />
-                </div>
-
-                <div class="d-flex justify-content-between">
+                <div class="d-grid gap-2">
                   <button type="submit" class="btn btn-primary">
                     Save Changes
                   </button>
-                  <a href="/users/dashboard" class="btn btn-secondary"
-                    >Cancel</a
-                  >
+                  <a href="/users/dashboard" class="btn btn-outline-secondary">
+                    Cancel
+                  </a>
                 </div>
               </form>
             </div>
@@ -157,5 +275,21 @@
 
     <%- include('partials/footer') %>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Custom file input handling
+      document
+        .querySelector(".choose-file-btn")
+        .addEventListener("click", function () {
+          document.querySelector("#profilePicture").click();
+        });
+
+      document
+        .querySelector("#profilePicture")
+        .addEventListener("change", function () {
+          const fileName = this.files[0]?.name || "No file chosen";
+          this.parentElement.querySelector(".text-muted").textContent =
+            fileName;
+        });
+    </script>
   </body>
 </html>

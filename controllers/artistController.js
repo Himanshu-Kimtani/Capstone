@@ -1,10 +1,10 @@
-const Artist = require("../models/Artist");
-const Event = require("../models/Event");
+const { Artist, User, Event, ArtistFollow } = require("../models");
+const { Op } = require("sequelize");
 
 exports.getAllArtists = async (req, res) => {
   try {
     const artists = await Artist.findAll({
-      order: [["name", "ASC"]], // ✅ Sort artists alphabetically
+      order: [["name", "ASC"]],
     });
 
     res.render("artists", { title: "Artists", artists });
@@ -196,5 +196,140 @@ exports.deleteEvent = async (req, res) => {
     console.error("Error deleting event:", error);
     req.flash("error", "An error occurred while deleting the event.");
     res.redirect("/artist/events");
+  }
+};
+
+// Get all artists for discovery page
+exports.getDiscoverArtists = async (req, res) => {
+  try {
+    const artists = await Artist.findAll({
+      include: [
+        {
+          model: Event,
+          required: false,
+          where: {
+            date: {
+              [Op.gte]: new Date(),
+            },
+          },
+        },
+        {
+          model: User,
+          as: "followersList",
+          through: ArtistFollow,
+          attributes: ["id"],
+          required: false,
+        },
+      ],
+      order: [["name", "ASC"]],
+    });
+
+    res.render("artists/discover", {
+      title: "Discover Artists",
+      artists,
+      user: req.session.user,
+      messages: req.flash(),
+    });
+  } catch (error) {
+    console.error("Error fetching artists:", error);
+    req.flash("error", "Failed to load artists");
+    res.redirect("/");
+  }
+};
+
+// Follow/Unfollow artist
+exports.toggleFollow = async (req, res) => {
+  try {
+    const artistId = req.params.id;
+    const userId = req.session.user.id;
+
+    console.log(
+      `[FOLLOW] User ${userId} attempting to toggle follow for artist ${artistId}`
+    );
+
+    // Check if already following
+    const existingFollow = await ArtistFollow.findOne({
+      where: { userId, artistId },
+    });
+
+    let result;
+    if (existingFollow) {
+      // Unfollow
+      await existingFollow.destroy();
+      result = {
+        success: true,
+        action: "unfollow",
+        message: "Successfully unfollowed artist",
+      };
+      console.log(`[FOLLOW] User ${userId} unfollowed artist ${artistId}`);
+    } else {
+      // Follow
+      await ArtistFollow.create({ userId, artistId });
+      result = {
+        success: true,
+        action: "follow",
+        message: "Successfully followed artist",
+      };
+      console.log(`[FOLLOW] User ${userId} followed artist ${artistId}`);
+    }
+
+    // Send JSON response for fetch API
+    res.json(result);
+  } catch (error) {
+    console.error("[FOLLOW] Error in toggleFollow:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to update follow status",
+    });
+  }
+};
+
+// Get artist profile
+exports.getArtistProfile = async (req, res) => {
+  try {
+    const artist = await Artist.findByPk(req.params.id, {
+      include: [
+        {
+          model: Event,
+          where: {
+            date: {
+              [Op.gte]: new Date(),
+            },
+          },
+          required: false,
+          order: [["date", "ASC"]],
+        },
+        {
+          model: User,
+          as: "followersList",
+          through: ArtistFollow,
+          attributes: ["id", "name"], // Include name for potential future use
+          required: false,
+        },
+      ],
+    });
+
+    if (!artist) {
+      req.flash("error", "Artist not found");
+      return res.redirect("/artists/discover");
+    }
+
+    // Log followers count for debugging
+    console.log(
+      `[ARTIST PROFILE] Artist ${artist.id} has ${
+        artist.followersList ? artist.followersList.length : 0
+      } followers`
+    );
+
+    res.render("artists/profile", {
+      title: `${artist.name} | Vynyl`,
+      artist,
+      user: req.session.user,
+      messages: req.flash(),
+    });
+  } catch (error) {
+    console.error("Error fetching artist profile:", error);
+    req.flash("error", "Failed to load artist profile");
+    res.redirect("/artists/discover");
   }
 };
