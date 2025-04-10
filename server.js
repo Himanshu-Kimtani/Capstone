@@ -43,8 +43,6 @@ app.use(
   })
 );
 
-// The Sessions table will be created in the setupDatabase function
-// No need to call sessionStore.sync() here
 
 app.use(flash());
 
@@ -71,20 +69,20 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(loggerMiddleware);
 
-// Ensure Upload Directory Exists
+
 const fs = require("fs");
 const uploadDir = path.join(__dirname, "public/uploads/gallery");
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-// Create directories for artist uploads
+// directories for artist uploads
 const artistsUploadDir = path.join(__dirname, "public/uploads/artists");
 if (!fs.existsSync(artistsUploadDir)) {
   fs.mkdirSync(artistsUploadDir, { recursive: true });
 }
 
-// Create directories for event uploads
+// directories for event uploads
 const eventsUploadDir = path.join(__dirname, "public/uploads/events");
 if (!fs.existsSync(eventsUploadDir)) {
   fs.mkdirSync(eventsUploadDir, { recursive: true });
@@ -214,7 +212,6 @@ const setupDatabase = async () => {
     await sequelize.authenticate();
     console.log("Database connection established");
 
-    // Only create the Sessions table if it doesn't exist
     await sessionStore.sync({ force: false });
     console.log("Sessions table ready");
 
